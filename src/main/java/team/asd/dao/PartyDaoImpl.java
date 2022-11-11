@@ -15,16 +15,16 @@ public class PartyDaoImpl implements PartyDao {
 
     @Override
     public void create(Party party) {
-
+        // insert new party
     }
 
     @Override
     public void update(Party party) {
-
+        // update party information
     }
 
     @Override
     public void deleteById(Integer id) {
-
+        // change party state by id
     }
 }
