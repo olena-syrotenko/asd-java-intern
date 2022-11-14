@@ -41,6 +41,9 @@ public class PartyController {
 	@PutMapping("/")
 	public PartyDto updateParty(@RequestBody @Valid PartyDto partyDto) {
 		Party party = PartyUtil.convertToEntity(partyDto);
+		if (partyDto.getState() == null) {
+			party.setState(null);
+		}
 		partyService.update(party);
 		return PartyUtil.convertToDto(party);
 	}

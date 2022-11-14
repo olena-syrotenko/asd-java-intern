@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
@@ -21,7 +20,6 @@ public class PartyDto {
 	private Integer id;
 
 	@JsonProperty("name")
-	@NotBlank(message = "Name is mandatory")
 	@Size(max = 45, message = "Name size cannot be more than 45 characters")
 	private String name;
 
