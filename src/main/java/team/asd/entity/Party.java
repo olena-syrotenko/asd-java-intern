@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import team.asd.constants.PartyState;
 import team.asd.constants.UserType;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +23,5 @@ public class Party {
 	private String password;
 	private String currency;
 	private UserType userType;
-	private LocalDateTime version;
+	private Date version;
 }
