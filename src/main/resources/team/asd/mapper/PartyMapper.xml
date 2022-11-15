@@ -15,8 +15,12 @@
 		<result property='version' column='version'/>
 	</resultMap>
 
+	<sql id="partyColumnList">
+		id, name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version
+	</sql>
+
 	<select id="readById" parameterType="int" resultMap="PartyResultMap">
-		SELECT *
+		SELECT <include refid="partyColumnList"/>
 		FROM party
 		WHERE id = #{id}
 	</select>
