@@ -1,30 +1,36 @@
 package team.asd.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import team.asd.entity.Party;
+import team.asd.mapper.PartyMapper;
 
 @Repository
 public class PartyDaoImpl implements PartyDao {
+    private final PartyMapper partyMapper;
+
+    @Autowired
+    public PartyDaoImpl(PartyMapper partyMapper) {
+        this.partyMapper = partyMapper;
+    }
+
     @Override
     public Party readById(Integer id) {
-        return Party.builder()
-                .id(10)
-                .name("test")
-                .build();
+        return partyMapper.readById(id);
     }
 
     @Override
     public void create(Party party) {
-        // insert new party
+        partyMapper.create(party);
     }
 
     @Override
     public void update(Party party) {
-        // update party information
+        partyMapper.update(party);
     }
 
     @Override
     public void deleteById(Integer id) {
-        // change party state by id
+        partyMapper.deleteById(id);
     }
 }

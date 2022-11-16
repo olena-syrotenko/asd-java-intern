@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.asd.mapper.PartyMapper">
+	<resultMap type='team.asd.entity.Party' id='PartyResultMap'>
+		<id property='id' column='id'/>
+		<result property='name' column='name'/>
+		<result property='state' column='state'/>
+		<result property='postalAddress' column='postal_address'/>
+		<result property='emailAddress' column='email_address'/>
+		<result property='mobilePhone' column='mobile_phone'/>
+		<result property='password' column='password'/>
+		<result property='currency' column='currency'/>
+		<result property='userType' column='user_type'/>
+		<result property='version' column='version'/>
+	</resultMap>
+
+	<sql id="partyColumnList">
+		id, name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version
+	</sql>
+
+	<select id="readById" parameterType="int" resultMap="PartyResultMap">
+		SELECT <include refid="partyColumnList"/>
+		FROM party
+		WHERE id = #{id}
+	</select>
+
+	<insert id="create" parameterType="team.asd.entity.Party">
+		INSERT INTO party(name, state, postal_address, email_address, mobile_phone, password, currency, user_type)
+		VALUES (#{name}, #{state}, #{postalAddress}, #{emailAddress}, #{mobilePhone}, #{password}, #{currency}, #{userType})
+	</insert>
+
+	<update id="update" parameterType="team.asd.entity.Party">
+		UPDATE party
+		<set>
+			<if test="name != null">name = #{name},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="postalAddress != null">postal_address = #{postalAddress},</if>
+			<if test="emailAddress != null">email_address = #{emailAddress},</if>
+			<if test="mobilePhone != null">mobile_phone = #{mobilePhone},</if>
+			<if test="password != null">password = #{password},</if>
+			<if test="currency != null">currency = #{currency},</if>
+			<if test="userType != null">user_type = #{userType}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteById" parameterType="int">
+		UPDATE party
+		SET state = 'Final'
+		WHERE id = #{id}
+	</update>
+</mapper>
