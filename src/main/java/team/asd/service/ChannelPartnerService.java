@@ -20,14 +20,14 @@ public class ChannelPartnerService {
 	}
 
 	public void create(ChannelPartner channelPartner) {
-		if (channelPartner == null || ValidationUtil.isWrongRequiredFields(channelPartner)) {
+		if (ValidationUtil.isWrongRequiredFields(channelPartner)) {
 			throw new ValidationException("Wrong ChannelPartner object was provided");
 		}
 		channelPartnerDao.create(channelPartner);
 	}
 
 	public void update(ChannelPartner channelPartner) {
-		if (channelPartner == null || ValidationUtil.isWrongId(channelPartner.getId())) {
+		if (ValidationUtil.isWrongUpdateObject(channelPartner)) {
 			throw new ValidationException("Wrong ChannelPartner object was provided");
 		}
 		channelPartnerDao.update(channelPartner);

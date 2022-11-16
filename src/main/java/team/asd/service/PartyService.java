@@ -24,14 +24,14 @@ public class PartyService {
 	}
 
 	public void create(Party party) {
-		if (party == null || ValidationUtil.isWrongRequiredFields(party)) {
+		if (ValidationUtil.isWrongRequiredFields(party)) {
 			throw new ValidationException("Wrong Party object was provided");
 		}
 		partyDao.create(party);
 	}
 
 	public void update(Party party) {
-		if (party == null || ValidationUtil.isWrongId(party.getId())) {
+		if (ValidationUtil.isWrongUpdateObject(party)) {
 			throw new ValidationException("Wrong Party object was provided");
 		}
 		partyDao.update(party);
