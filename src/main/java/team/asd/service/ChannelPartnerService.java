@@ -1,6 +1,5 @@
 package team.asd.service;
 
-import org.apache.commons.lang3.StringUtils;
 import team.asd.dao.ChannelPartnerDao;
 import team.asd.entity.ChannelPartner;
 import team.asd.exceptions.ValidationException;

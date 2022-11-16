@@ -14,7 +14,7 @@ public class ValidationUtil {
 	}
 
 	public static boolean isWrongRequiredFields(ChannelPartner channelPartner) {
-		return ValidationUtil.isWrongId(channelPartner.getPartyId()) || StringUtils.isBlank(channelPartner.getAbbreviation()) || StringUtils.isBlank(
+		return ValidationUtil.isWrongId(channelPartner.getPartyId()) || StringUtils.isAnyBlank(channelPartner.getAbbreviation(),
 				channelPartner.getChannelName());
 	}
 }
