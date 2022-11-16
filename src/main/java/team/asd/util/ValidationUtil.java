@@ -15,8 +15,12 @@ public class ValidationUtil {
 	public static boolean isWrongUpdateObject(Object object) {
 		try {
 			return object == null || isWrongId((Integer) MethodUtils.invokeMethod(object, "getId"));
-		} catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
-			throw new RuntimeException("Wrong object was provided for update");
+		} catch (NoSuchMethodException ex) {
+			throw new RuntimeException("The provided object does not has the required method");
+		} catch (IllegalAccessException ex) {
+			throw new RuntimeException("The required method is not accessible");
+		} catch (InvocationTargetException ex) {
+			throw new RuntimeException(ex.getMessage());
 		}
 	}
 
