@@ -1,13 +1,17 @@
 package team.asd.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.asd.dao.ChannelPartnerDao;
 import team.asd.entity.ChannelPartner;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
 
+@Service
 public class ChannelPartnerService {
 	private final ChannelPartnerDao channelPartnerDao;
 
+	@Autowired
 	public ChannelPartnerService(ChannelPartnerDao channelPartnerDao) {
 		this.channelPartnerDao = channelPartnerDao;
 	}

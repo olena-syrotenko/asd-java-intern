@@ -5,6 +5,7 @@ import team.asd.constants.ChannelPartnerState;
 import team.asd.dto.ChannelPartnerDto;
 import team.asd.entity.ChannelPartner;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ChannelPartnerUtil {
@@ -19,7 +20,8 @@ public class ChannelPartnerUtil {
 				.channelName(channelPartnerDto.getChannelName())
 				.state(convertStringIntoChannelPartnerState(channelPartnerDto.getState()))
 				.commission(channelPartnerDto.getCommission())
-				.bpCommission(channelPartnerDto.getBpCommission())
+				.bpCommission(Optional.ofNullable(channelPartnerDto.getBpCommission())
+						.orElse(3.0))
 				.isFundsHolder(convertIntegerIntoBoolean(channelPartnerDto.getIsFundsHolder()))
 				.build();
 	}
