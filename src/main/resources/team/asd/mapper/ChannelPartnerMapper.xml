@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.asd.mapper.ChannelPartnerMapper">
+	<resultMap type='team.asd.entity.ChannelPartner' id='ChannelPartnerResultMap'>
+		<id property='id' column='id'/>
+		<result property='partyId' column='party_id'/>
+		<result property='abbreviation' column='abbreviation'/>
+		<result property='channelName' column='channel_name'/>
+		<result property='state' column='state'/>
+		<result property='commission' column='commission'/>
+		<result property='bpCommission' column='bp_commission'/>
+		<result property='isFundsHolder' column='funds_holder'/>
+		<result property='version' column='version'/>
+	</resultMap>
+
+	<sql id="ChannelPartnerColumnList">
+		id, party_id, abbreviation, channel_name, state, commission, bp_commission, funds_holder, version
+	</sql>
+
+	<select id="readById" parameterType="int" resultMap="ChannelPartnerResultMap">
+		SELECT
+		<include refid="ChannelPartnerColumnList"/>
+		FROM channel_partner
+		WHERE id = #{id}
+	</select>
+
+	<insert id="create" parameterType="team.asd.entity.ChannelPartner">
+		INSERT INTO channel_partner(party_id, abbreviation, channel_name, state, commission, bp_commission, funds_holder)
+		VALUES (#{partyId}, #{abbreviation}, #{channelName}, #{state}, #{commission}, #{bpCommission}, #{isFundsHolder})
+	</insert>
+
+	<update id="update" parameterType="team.asd.entity.ChannelPartner">
+		UPDATE channel_partner
+		<set>
+			<if test="partyId != null">party_id = #{partyId},</if>
+			<if test="abbreviation != null">abbreviation = #{abbreviation},</if>
+			<if test="channelName != null">channel_name = #{channelName},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="commission != null">commission = #{commission},</if>
+			<if test="bpCommission != null">bp_commission = #{bpCommission},</if>
+			<if test="isFundsHolder != null">funds_holder = #{isFundsHolder}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteById" parameterType="int">
+		UPDATE channel_partner
+		SET state = 'Suspended'
+		WHERE id = #{id}
+	</update>
+</mapper>
