@@ -20,6 +20,13 @@ public class ExceptionHandler {
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(InvokeMethodException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage catchValidationException(InvokeMethodException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage());
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorMessage catchMethodArgumentNotValidException(MethodArgumentNotValidException exception) {

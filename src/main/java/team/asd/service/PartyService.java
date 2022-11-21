@@ -1,11 +1,11 @@
 package team.asd.service;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.dao.PartyDao;
 import team.asd.entity.Party;
 import team.asd.exceptions.ValidationException;
+import team.asd.util.ValidationUtil;
 
 @Service
 public class PartyService {
@@ -17,34 +17,30 @@ public class PartyService {
 	}
 
 	public Party readById(Integer id) {
-		if (isWrongId(id)) {
+		if (ValidationUtil.isWrongId(id)) {
 			throw new ValidationException("Wrong id was provided");
 		}
 		return partyDao.readById(id);
 	}
 
 	public void create(Party party) {
-		if (party == null || StringUtils.isBlank(party.getName())) {
+		if (ValidationUtil.isWrongRequiredFields(party)) {
 			throw new ValidationException("Wrong Party object was provided");
 		}
 		partyDao.create(party);
 	}
 
 	public void update(Party party) {
-		if (party == null || isWrongId(party.getId())) {
+		if (ValidationUtil.isWrongUpdateObject(party)) {
 			throw new ValidationException("Wrong Party object was provided");
 		}
 		partyDao.update(party);
 	}
 
 	public void delete(Integer id) {
-		if (isWrongId(id)) {
+		if (ValidationUtil.isWrongId(id)) {
 			throw new ValidationException("Wrong id was provided");
 		}
 		partyDao.deleteById(id);
-	}
-
-	private boolean isWrongId(Integer id){
-		return id == null || id <= 0;
 	}
 }
