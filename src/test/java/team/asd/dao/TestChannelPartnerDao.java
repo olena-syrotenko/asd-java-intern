@@ -2,7 +2,7 @@ package team.asd.dao;
 
 import team.asd.entity.ChannelPartner;
 
-public class TestChannelPartnerDao implements ChannelPartnerDao{
+public class TestChannelPartnerDao implements ChannelPartnerDao {
 	@Override
 	public ChannelPartner readById(Integer id) {
 		return null;
