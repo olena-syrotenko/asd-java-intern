@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.asd.mapper.PropertyManagerInfoMapper">
+	<resultMap id="PropertyManagerInfoResultMap" type="team.asd.entity.PropertyManagerInfo">
+		<id property="id" column="id"/>
+		<result property="pmId" column="pm_id"/>
+		<result property="isFundsHolder" column="funds_holder"/>
+		<result property="numberOfPayments" column="number_of_payments" typeHandler="team.asd.handler.PaymentNumberHandler"/>
+		<result property="paymentAmount" column="payment_amount"/>
+		<result property="paymentType" column="payment_type" typeHandler="team.asd.handler.PaymentTypeHandler"/>
+		<result property="state" column="state"/>
+		<result property="commission" column="commission"/>
+		<result property="isNetRate" column="net_rate"/>
+		<result property="version" column="version"/>
+	</resultMap>
+
+	<sql id="PropertyManagerInfoColumnList">
+		id, pm_id, funds_holder, number_of_payments, payment_amount, payment_type, state, commission, net_rate, version
+	</sql>
+
+	<select id="readById" parameterType="int" resultMap="PropertyManagerInfoResultMap">
+		SELECT
+		<include refid="PropertyManagerInfoColumnList"/>
+		FROM property_manager_info
+		WHERE id = #{id}
+	</select>
+
+	<insert id="create" parameterType="team.asd.entity.PropertyManagerInfo">
+		INSERT INTO property_manager_info(pm_id, funds_holder, number_of_payments, payment_amount, payment_type, state, commission, net_rate)
+		VALUES (#{pmId}, #{isFundsHolder}, #{numberOfPayments}, #{paymentAmount}, #{paymentType}, #{state}, #{commission}, #{isNetRate})
+	</insert>
+
+	<update id="update" parameterType="team.asd.entity.PropertyManagerInfo">
+		UPDATE property_manager_info
+		<set>
+			<if test="pmId != null">pm_id = #{pmId},</if>
+			<if test="isFundsHolder != null">funds_holder = #{isFundsHolder},</if>
+			<if test="numberOfPayments != null">number_of_payments = #{numberOfPayments},</if>
+			<if test="paymentAmount != null">payment_amount = #{paymentAmount},</if>
+			<if test="paymentType != null">payment_type = #{paymentType},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="commission != null">commission = #{commission},</if>
+			<if test="isNetRate != null">net_rate = #{isNetRate}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<update id="deleteById" parameterType="int">
+		UPDATE property_manager_info
+		SET state = 'Suspended'
+		WHERE id = #{id}
+	</update>
+</mapper>
