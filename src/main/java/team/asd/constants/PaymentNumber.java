@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 public enum PaymentNumber {
 
-	FullPayment(0), SplitPayment(1);
+	FullPayment(1), SplitPayment(2);
 
 	private final Integer paymentNumber;
 
