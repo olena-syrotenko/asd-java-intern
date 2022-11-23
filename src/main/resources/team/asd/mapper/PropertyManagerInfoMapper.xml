@@ -6,9 +6,9 @@
 		<id property="id" column="id"/>
 		<result property="pmId" column="pm_id"/>
 		<result property="isFundsHolder" column="funds_holder"/>
-		<result property="numberOfPayments" column="number_of_payments" typeHandler="team.asd.handler.PaymentNumberHandler"/>
+		<result property="numberOfPayments" column="number_of_payments"/>
 		<result property="paymentAmount" column="payment_amount"/>
-		<result property="paymentType" column="payment_type" typeHandler="team.asd.handler.PaymentTypeHandler"/>
+		<result property="paymentType" column="payment_type"/>
 		<result property="state" column="state"/>
 		<result property="commission" column="commission"/>
 		<result property="isNetRate" column="net_rate"/>
