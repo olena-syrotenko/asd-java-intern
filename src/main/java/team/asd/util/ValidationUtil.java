@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import team.asd.entity.ChannelPartner;
 import team.asd.entity.Party;
+import team.asd.entity.PropertyManagerInfo;
 import team.asd.exceptions.InvokeMethodException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -28,5 +29,9 @@ public class ValidationUtil {
 	public static boolean isWrongRequiredFields(ChannelPartner channelPartner) {
 		return channelPartner == null || ValidationUtil.isWrongId(channelPartner.getPartyId()) || StringUtils.isAnyBlank(channelPartner.getAbbreviation(),
 				channelPartner.getChannelName());
+	}
+
+	public static boolean isWrongRequiredFields(PropertyManagerInfo propertyManagerInfo) {
+		return propertyManagerInfo == null || ValidationUtil.isWrongId(propertyManagerInfo.getPmId());
 	}
 }

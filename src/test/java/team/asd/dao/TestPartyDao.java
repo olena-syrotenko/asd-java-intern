@@ -2,7 +2,7 @@ package team.asd.dao;
 
 import team.asd.entity.Party;
 
-public class TestPartyDao implements PartyDao{
+public class TestPartyDao implements PartyDao {
 	@Override
 	public Party readById(Integer id) {
 		return null;
