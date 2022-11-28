@@ -1,37 +1,57 @@
 package team.asd.service;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import team.asd.constants.UserType;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
+import team.asd.constants.PartyState;
 import team.asd.dao.PartyDao;
-import team.asd.dao.TestPartyDao;
+import team.asd.data.PartyData;
 import team.asd.entity.Party;
 import team.asd.exceptions.ValidationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 class PartyServiceTest {
-	private static final PartyDao partyDao = new TestPartyDao();
-	private static PartyService partyService;
+	@Mock
+	private PartyDao partyDao;
+	private PartyService partyService;
 	private Party party;
 
-	@BeforeAll
-	public static void setUp() {
-		partyService = new PartyService(partyDao);
-	}
-
 	@BeforeEach
-	public void initParty() {
-		party = Party.builder()
-				.name("test name")
-				.postalAddress("test address")
-				.emailAddress("test@email.com")
-				.password("12345")
-				.currency("USD")
-				.userType(UserType.Customer)
-				.build();
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
+		partyService = new PartyService(partyDao);
+		party = new Party();
+
+		doAnswer(invocation -> {
+			party = PartyData.getPartyAfterCreate();
+			return null;
+		}).when(partyDao)
+				.create(any(Party.class));
+
+		doAnswer(invocation -> {
+			party = PartyData.getPartyAfterUpdate();
+			return null;
+		}).when(partyDao)
+				.update(any(Party.class));
+
+		doAnswer(invocation -> {
+			party = PartyData.getPartyAfterDelete();
+			return null;
+		}).when(partyDao)
+				.deleteById(any(Integer.class));
 	}
 
 	@Test
@@ -47,7 +67,15 @@ class PartyServiceTest {
 
 	@Test
 	void testReadById() throws ValidationException {
-		assertNull(partyService.readById(5), "Null value should be returned");
+		when(partyDao.readById(1)).thenReturn(Party.builder()
+				.id(1)
+				.build());
+
+		assertNotNull(partyService.readById(1), "Party object should be returned");
+		assertEquals(1, partyService.readById(1)
+				.getId(), "Id should be equal");
+		assertNull(partyService.readById(100), "Null should be returned");
+		verify(partyDao, times(3)).readById(any(Integer.class));
 	}
 
 	@Test
@@ -65,7 +93,14 @@ class PartyServiceTest {
 
 	@Test
 	void testCreate() throws ValidationException {
-		assertDoesNotThrow(() -> partyService.create(party), "Validation should be passed");
+		party.setName("test name");
+		partyService.create(party);
+		when(partyDao.readById(PartyData.getCreatedId())).thenReturn(party);
+
+		assertNotNull(partyService.readById(PartyData.getCreatedId()));
+		assertEquals(PartyData.getCreatedId(), partyService.readById(PartyData.getCreatedId())
+				.getId());
+		verify(partyDao).create(any(Party.class));
 	}
 
 	@Test
@@ -84,8 +119,14 @@ class PartyServiceTest {
 
 	@Test
 	void testUpdate() throws ValidationException {
-		party.setId(12);
-		assertDoesNotThrow(() -> partyService.update(party), "Validation should be passed");
+		party.setId(PartyData.getUpdatedId());
+		partyService.update(party);
+		when(partyDao.readById(party.getId())).thenReturn(party);
+
+		assertNotNull(partyService.readById(party.getId()));
+		assertEquals("updated party", partyService.readById(party.getId())
+				.getName());
+		verify(partyDao).update(any(Party.class));
 	}
 
 	@Test
@@ -101,6 +142,12 @@ class PartyServiceTest {
 
 	@Test
 	void testDelete() throws ValidationException {
-		assertDoesNotThrow(() -> partyService.delete(15), "Validation should be passed");
+		partyService.delete(PartyData.getDeletedId());
+		when(partyDao.readById(PartyData.getDeletedId())).thenReturn(party);
+
+		assertNotNull(partyService.readById(PartyData.getDeletedId()));
+		assertEquals(PartyState.Final, partyService.readById(PartyData.getDeletedId())
+				.getState());
+		verify(partyDao).deleteById(any(Integer.class));
 	}
 }
