@@ -29,43 +29,14 @@ class PartyServiceTest {
 	private PartyDao partyDao;
 	private PartyService partyService;
 	private Party party;
-	private Party createdParty;
-	private Party updatedParty;
-	private Party deletedParty;
+	private static Party mockParty;
 
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
 		partyService = new PartyService(partyDao);
 		party = new Party();
-		createdParty = null;
-		updatedParty = PartyData.getPartyBeforeUpdate();
-		deletedParty = PartyData.getPartyBeforeDelete();
-
-		when(partyDao.readById(1)).thenReturn(Party.builder()
-				.id(1)
-				.build());
-		when(partyDao.readById(PartyData.getCreatedId())).thenAnswer(invocation -> createdParty);
-		when(partyDao.readById(PartyData.getUpdatedId())).thenAnswer(invocation -> updatedParty);
-		when(partyDao.readById(PartyData.getDeletedId())).thenAnswer(invocation -> deletedParty);
-
-		doAnswer(invocation -> {
-			createdParty = PartyData.getPartyAfterCreate();
-			return null;
-		}).when(partyDao)
-				.create(any(Party.class));
-
-		doAnswer(invocation -> {
-			updatedParty = PartyData.getPartyAfterUpdate();
-			return null;
-		}).when(partyDao)
-				.update(any(Party.class));
-
-		doAnswer(invocation -> {
-			deletedParty = PartyData.getPartyAfterDelete();
-			return null;
-		}).when(partyDao)
-				.deleteById(any(Integer.class));
+		mockParty = null;
 	}
 
 	@Test
@@ -81,6 +52,9 @@ class PartyServiceTest {
 
 	@Test
 	void testReadById() throws ValidationException {
+		when(partyDao.readById(1)).thenReturn(Party.builder()
+				.id(1)
+				.build());
 		Party readParty = partyService.readById(1);
 		assertNotNull(readParty, "Party object should be returned");
 		assertEquals(1, readParty.getId(), "Ids should be equal");
@@ -103,17 +77,21 @@ class PartyServiceTest {
 
 	@Test
 	void testCreate() throws ValidationException {
-		assertNull(partyService.readById(PartyData.getCreatedId()), "Created party object should be null before create");
+		doAnswer(invocation -> {
+			mockParty = PartyData.getPartyAfterCreate(invocation.getArgument(0, Party.class));
+			return null;
+		}).when(partyDao)
+				.create(any(Party.class));
+
+		assertNull(mockParty, "Created party object should be null before create");
 
 		party.setName("created party");
 		partyService.create(party);
-		Party insertedParty = partyService.readById(PartyData.getCreatedId());
 
-		assertNotNull(insertedParty, "Created party object should be returned");
-		assertEquals(PartyData.getCreatedId(), insertedParty.getId(), "Ids should be equal");
-		assertEquals("created party", insertedParty.getName(), "Names should be equal");
+		assertNotNull(mockParty, "Created party object should be returned");
+		assertEquals(PartyData.getCreatedId(), mockParty.getId(), "Ids should be equal");
+		assertEquals("created party", mockParty.getName(), "Names should be equal");
 		verify(partyDao, atLeast(1)).create(any(Party.class));
-		verify(partyDao, atLeast(2)).readById(any(Integer.class));
 	}
 
 	@Test
@@ -132,18 +110,26 @@ class PartyServiceTest {
 
 	@Test
 	void testUpdate() throws ValidationException {
-		assertNotEquals("updated party", partyService.readById(PartyData.getUpdatedId())
-				.getName(), "Party name should not be changed before update");
+		mockParty = Party.builder()
+				.id(1)
+				.name("test")
+				.build();
 
-		party.setId(PartyData.getUpdatedId());
+		doAnswer(invocation -> {
+			mockParty = PartyData.getPartyAfterUpdate(invocation.getArgument(0, Party.class));
+			return null;
+		}).when(partyDao)
+				.update(any(Party.class));
+
+		assertNotEquals("updated party", mockParty.getName(), "Party name should not be changed before update");
+
+		party.setId(1);
 		party.setName("updated party");
 		partyService.update(party);
-		Party changedParty = partyService.readById(PartyData.getUpdatedId());
 
-		assertEquals(PartyData.getUpdatedId(), changedParty.getId(), "Ids should be equal");
-		assertEquals("updated party", changedParty.getName(), "Party name should be updated");
+		assertEquals(party.getId(), mockParty.getId(), "Ids should be equal");
+		assertEquals(party.getName(), mockParty.getName(), "Party name should be updated");
 		verify(partyDao, atLeast(1)).update(any(Party.class));
-		verify(partyDao, atLeast(2)).readById(any(Integer.class));
 	}
 
 	@Test
@@ -159,15 +145,23 @@ class PartyServiceTest {
 
 	@Test
 	void testDelete() throws ValidationException {
-		assertNotEquals(PartyState.Final, partyService.readById(PartyData.getDeletedId())
-				.getState(), "State should not be final before delete");
+		mockParty = Party.builder()
+				.id(1)
+				.state(PartyState.Created)
+				.build();
 
-		partyService.delete(PartyData.getDeletedId());
-		Party removedParty = partyService.readById(PartyData.getDeletedId());
+		doAnswer(invocation -> {
+			mockParty = PartyData.getPartyAfterDelete(invocation.getArgument(0, Integer.class));
+			return null;
+		}).when(partyDao)
+				.deleteById(any(Integer.class));
 
-		assertEquals(PartyData.getDeletedId(), removedParty.getId(), "Ids should be equal");
-		assertEquals(PartyState.Final, removedParty.getState(), "Party state should be changed to Final");
+		assertNotEquals(PartyState.Final, mockParty.getState(), "State should not be final before delete");
+
+		partyService.delete(1);
+
+		assertEquals(1, mockParty.getId(), "Ids should be equal");
+		assertEquals(PartyState.Final, mockParty.getState(), "Party state should be changed to Final");
 		verify(partyDao, atLeast(1)).deleteById(any(Integer.class));
-		verify(partyDao, atLeast(2)).readById(any(Integer.class));
 	}
 }

@@ -5,52 +5,42 @@ import team.asd.entity.Party;
 
 public class PartyData {
 	private static final Integer CREATED_ID = 10;
-	private static final Integer UPDATED_ID = 11;
-	private static final Integer DELETED_ID = 12;
 
 	public static Integer getCreatedId() {
 		return CREATED_ID;
 	}
 
-	public static Integer getUpdatedId() {
-		return UPDATED_ID;
-	}
-
-	public static Integer getDeletedId() {
-		return DELETED_ID;
-	}
-
-	public static Party getPartyAfterCreate() {
+	public static Party getPartyAfterCreate(Party party) {
 		return Party.builder()
 				.id(CREATED_ID)
-				.name("created party")
+				.name(party.getName())
+				.state(party.getState())
+				.postalAddress(party.getPostalAddress())
+				.emailAddress(party.getEmailAddress())
+				.mobilePhone(party.getMobilePhone())
+				.password(party.getPassword())
+				.currency(party.getCurrency())
+				.userType(party.getUserType())
 				.build();
 	}
 
-	public static Party getPartyBeforeUpdate() {
+	public static Party getPartyAfterUpdate(Party party) {
 		return Party.builder()
-				.id(PartyData.getUpdatedId())
-				.name("test")
+				.id(party.getId())
+				.name(party.getName())
+				.state(party.getState())
+				.postalAddress(party.getPostalAddress())
+				.emailAddress(party.getEmailAddress())
+				.mobilePhone(party.getMobilePhone())
+				.password(party.getPassword())
+				.currency(party.getCurrency())
+				.userType(party.getUserType())
 				.build();
 	}
 
-	public static Party getPartyAfterUpdate() {
+	public static Party getPartyAfterDelete(Integer id) {
 		return Party.builder()
-				.id(UPDATED_ID)
-				.name("updated party")
-				.build();
-	}
-
-	public static Party getPartyBeforeDelete() {
-		return Party.builder()
-				.id(PartyData.getDeletedId())
-				.state(PartyState.Created)
-				.build();
-	}
-
-	public static Party getPartyAfterDelete() {
-		return Party.builder()
-				.id(DELETED_ID)
+				.id(id)
 				.state(PartyState.Final)
 				.build();
 	}

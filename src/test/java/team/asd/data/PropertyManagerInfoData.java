@@ -5,54 +5,42 @@ import team.asd.entity.PropertyManagerInfo;
 
 public class PropertyManagerInfoData {
 	private static final Integer CREATED_ID = 10;
-	private static final Integer UPDATED_ID = 11;
-	private static final Integer DELETED_ID = 12;
 
 	public static Integer getCreatedId() {
 		return CREATED_ID;
 	}
 
-	public static Integer getUpdatedId() {
-		return UPDATED_ID;
-	}
-
-	public static Integer getDeletedId() {
-		return DELETED_ID;
-	}
-
-	public static PropertyManagerInfo getPropertyManagerInfoAfterCreate() {
+	public static PropertyManagerInfo getPropertyManagerInfoAfterCreate(PropertyManagerInfo propertyManagerInfo) {
 		return PropertyManagerInfo.builder()
 				.id(CREATED_ID)
-				.pmId(1)
+				.pmId(propertyManagerInfo.getPmId())
+				.isFundsHolder(propertyManagerInfo.getIsFundsHolder())
+				.numberOfPayments(propertyManagerInfo.getNumberOfPayments())
+				.paymentAmount(propertyManagerInfo.getPaymentAmount())
+				.paymentType(propertyManagerInfo.getPaymentType())
+				.state(propertyManagerInfo.getState())
+				.commission(propertyManagerInfo.getCommission())
+				.isNetRate(propertyManagerInfo.getIsNetRate())
 				.build();
 	}
 
-	public static PropertyManagerInfo getPropertyManagerInfoBeforeUpdate() {
+	public static PropertyManagerInfo getPropertyManagerInfoAfterUpdate(PropertyManagerInfo propertyManagerInfo) {
 		return PropertyManagerInfo.builder()
-				.id(UPDATED_ID)
-				.pmId(1)
-				.paymentAmount(120.0)
+				.id(propertyManagerInfo.getId())
+				.pmId(propertyManagerInfo.getPmId())
+				.isFundsHolder(propertyManagerInfo.getIsFundsHolder())
+				.numberOfPayments(propertyManagerInfo.getNumberOfPayments())
+				.paymentAmount(propertyManagerInfo.getPaymentAmount())
+				.paymentType(propertyManagerInfo.getPaymentType())
+				.state(propertyManagerInfo.getState())
+				.commission(propertyManagerInfo.getCommission())
+				.isNetRate(propertyManagerInfo.getIsNetRate())
 				.build();
 	}
 
-	public static PropertyManagerInfo getPropertyManagerInfoAfterUpdate() {
+	public static PropertyManagerInfo getPropertyManagerInfoAfterDelete(Integer id) {
 		return PropertyManagerInfo.builder()
-				.id(UPDATED_ID)
-				.pmId(1)
-				.paymentAmount(100.0)
-				.build();
-	}
-
-	public static PropertyManagerInfo getPropertyManagerInfoBeforeDelete() {
-		return PropertyManagerInfo.builder()
-				.id(DELETED_ID)
-				.state(PropertyManagerState.Created)
-				.build();
-	}
-
-	public static PropertyManagerInfo getPropertyManagerInfoAfterDelete() {
-		return PropertyManagerInfo.builder()
-				.id(DELETED_ID)
+				.id(id)
 				.state(PropertyManagerState.Suspended)
 				.build();
 	}

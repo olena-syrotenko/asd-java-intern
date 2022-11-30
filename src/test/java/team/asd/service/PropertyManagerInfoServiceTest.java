@@ -29,43 +29,14 @@ class PropertyManagerInfoServiceTest {
 	private PropertyManagerInfoDao propertyManagerInfoDao;
 	private PropertyManagerInfoService propertyManagerInfoService;
 	private PropertyManagerInfo propertyManagerInfo;
-	private PropertyManagerInfo createdPropertyManagerInfo;
-	private PropertyManagerInfo updatedPropertyManagerInfo;
-	private PropertyManagerInfo deletedPropertyManagerInfo;
+	private static PropertyManagerInfo mockPropertyManagerInfo;
 
 	@BeforeEach
 	public void initPropertyManagerInfo() {
 		MockitoAnnotations.openMocks(this);
 		propertyManagerInfoService = new PropertyManagerInfoService(propertyManagerInfoDao);
 		propertyManagerInfo = new PropertyManagerInfo();
-		createdPropertyManagerInfo = null;
-		updatedPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoBeforeUpdate();
-		deletedPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoBeforeDelete();
-
-		when(propertyManagerInfoDao.readById(1)).thenReturn(PropertyManagerInfo.builder()
-				.id(1)
-				.build());
-		when(propertyManagerInfoDao.readById(PropertyManagerInfoData.getCreatedId())).thenAnswer(invocation -> createdPropertyManagerInfo);
-		when(propertyManagerInfoDao.readById(PropertyManagerInfoData.getUpdatedId())).thenAnswer(invocation -> updatedPropertyManagerInfo);
-		when(propertyManagerInfoDao.readById(PropertyManagerInfoData.getDeletedId())).thenAnswer(invocation -> deletedPropertyManagerInfo);
-
-		doAnswer(invocation -> {
-			createdPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoAfterCreate();
-			return null;
-		}).when(propertyManagerInfoDao)
-				.create(any(PropertyManagerInfo.class));
-
-		doAnswer(invocation -> {
-			updatedPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoAfterUpdate();
-			return null;
-		}).when(propertyManagerInfoDao)
-				.update(any(PropertyManagerInfo.class));
-
-		doAnswer(invocation -> {
-			deletedPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoAfterDelete();
-			return null;
-		}).when(propertyManagerInfoDao)
-				.deleteById(any(Integer.class));
+		mockPropertyManagerInfo = null;
 	}
 
 	@Test
@@ -81,6 +52,9 @@ class PropertyManagerInfoServiceTest {
 
 	@Test
 	void testReadById() throws ValidationException {
+		when(propertyManagerInfoDao.readById(1)).thenReturn(PropertyManagerInfo.builder()
+				.id(1)
+				.build());
 		PropertyManagerInfo readPropertyManagerInfo = propertyManagerInfoService.readById(1);
 		assertNotNull(readPropertyManagerInfo, "PropertyManagerInfo object should be returned");
 		assertEquals(1, readPropertyManagerInfo.getId(), "Ids should be equal");
@@ -105,18 +79,21 @@ class PropertyManagerInfoServiceTest {
 
 	@Test
 	void testCreate() throws ValidationException {
-		assertNull(propertyManagerInfoService.readById(PropertyManagerInfoData.getCreatedId()),
-				"Created property manager info object should be null before create");
+		doAnswer(invocation -> {
+			mockPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoAfterCreate(invocation.getArgument(0, PropertyManagerInfo.class));
+			return null;
+		}).when(propertyManagerInfoDao)
+				.create(any(PropertyManagerInfo.class));
+
+		assertNull(mockPropertyManagerInfo, "Created property manager info object should be null before create");
 
 		propertyManagerInfo.setPmId(1);
 		propertyManagerInfoService.create(propertyManagerInfo);
-		PropertyManagerInfo insertedPropertyManagerInfo = propertyManagerInfoService.readById(PropertyManagerInfoData.getCreatedId());
 
-		assertNotNull(insertedPropertyManagerInfo, "Created PropertyManagerInfo object should be returned");
-		assertEquals(PropertyManagerInfoData.getCreatedId(), insertedPropertyManagerInfo.getId(), "Ids should be equal");
-		assertEquals(1, insertedPropertyManagerInfo.getPmId(), "Pm ids should be equal");
+		assertNotNull(mockPropertyManagerInfo, "Created PropertyManagerInfo object should be returned");
+		assertEquals(PropertyManagerInfoData.getCreatedId(), mockPropertyManagerInfo.getId(), "Ids should be equal");
+		assertEquals(1, mockPropertyManagerInfo.getPmId(), "Pm ids should be equal");
 		verify(propertyManagerInfoDao, atLeast(1)).create(any(PropertyManagerInfo.class));
-		verify(propertyManagerInfoDao, atLeast(2)).readById(any(Integer.class));
 	}
 
 	@Test
@@ -135,18 +112,25 @@ class PropertyManagerInfoServiceTest {
 
 	@Test
 	void testUpdate() throws ValidationException {
-		assertNotEquals(100, propertyManagerInfoService.readById(PropertyManagerInfoData.getUpdatedId())
-				.getPaymentAmount(), "Payment amount should not be changed before update");
+		mockPropertyManagerInfo = PropertyManagerInfo.builder()
+				.id(1)
+				.paymentAmount(100.0)
+				.build();
+		doAnswer(invocation -> {
+			mockPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoAfterUpdate(invocation.getArgument(0, PropertyManagerInfo.class));
+			return null;
+		}).when(propertyManagerInfoDao)
+				.update(any(PropertyManagerInfo.class));
 
-		propertyManagerInfo.setId(PropertyManagerInfoData.getUpdatedId());
-		propertyManagerInfo.setPaymentAmount(100.0);
+		assertNotEquals(500, mockPropertyManagerInfo.getPaymentAmount(), "Payment amount should not be changed before update");
+
+		propertyManagerInfo.setId(1);
+		propertyManagerInfo.setPaymentAmount(500.0);
 		propertyManagerInfoService.update(propertyManagerInfo);
 
-		PropertyManagerInfo changedPropertyManagerInfo = propertyManagerInfoService.readById(PropertyManagerInfoData.getUpdatedId());
-		assertEquals(PropertyManagerInfoData.getUpdatedId(), changedPropertyManagerInfo.getId(), "Ids should be equal");
-		assertEquals(100, changedPropertyManagerInfo.getPaymentAmount(), "Payment amount should be equal");
+		assertEquals(1, mockPropertyManagerInfo.getId(), "Ids should be equal");
+		assertEquals(500, mockPropertyManagerInfo.getPaymentAmount(), "Payment amount should be equal");
 		verify(propertyManagerInfoDao, atLeast(1)).update(any(PropertyManagerInfo.class));
-		verify(propertyManagerInfoDao, atLeast(2)).readById(any(Integer.class));
 	}
 
 	@Test
@@ -162,15 +146,21 @@ class PropertyManagerInfoServiceTest {
 
 	@Test
 	void testDelete() throws ValidationException {
-		assertNotEquals(PropertyManagerState.Suspended, propertyManagerInfoService.readById(PropertyManagerInfoData.getDeletedId())
-				.getState(), "Property manager state should not be suspended before delete");
+		mockPropertyManagerInfo = PropertyManagerInfo.builder()
+				.id(1)
+				.state(PropertyManagerState.Created)
+				.build();
+		doAnswer(invocation -> {
+			mockPropertyManagerInfo = PropertyManagerInfoData.getPropertyManagerInfoAfterDelete(invocation.getArgument(0, Integer.class));
+			return null;
+		}).when(propertyManagerInfoDao)
+				.deleteById(any(Integer.class));
+		assertNotEquals(PropertyManagerState.Suspended, mockPropertyManagerInfo.getState(), "Property manager state should not be suspended before delete");
 
-		propertyManagerInfoService.delete(PropertyManagerInfoData.getDeletedId());
-		PropertyManagerInfo removedPropertyManagerInfo = propertyManagerInfoService.readById(PropertyManagerInfoData.getDeletedId());
+		propertyManagerInfoService.delete(1);
 
-		assertEquals(PropertyManagerInfoData.getDeletedId(), removedPropertyManagerInfo.getId(), "Ids should be equal");
-		assertEquals(PropertyManagerState.Suspended, removedPropertyManagerInfo.getState(), "PropertyManagerInfo state should be changed to Suspended");
+		assertEquals(1, mockPropertyManagerInfo.getId(), "Ids should be equal");
+		assertEquals(PropertyManagerState.Suspended, mockPropertyManagerInfo.getState(), "PropertyManagerInfo state should be changed to Suspended");
 		verify(propertyManagerInfoDao, atLeast(1)).deleteById(any(Integer.class));
-		verify(propertyManagerInfoDao, atLeast(2)).readById(any(Integer.class));
 	}
 }
