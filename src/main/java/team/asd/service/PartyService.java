@@ -28,14 +28,14 @@ public class PartyService {
 
 	public List<Party> readByUserTypeNameAndState(Party party) {
 		if (ValidationUtil.isWrongRequiredFields(party)) {
-			throw new ValidationException("Required parameter name were not provided");
+			throw new ValidationException("Required parameter name was not provided");
 		}
 		return partyDao.readByUserTypeNameAndState(party);
 	}
 
 	public List<Party> readByEmailUserTypeNameAndState(Party party) {
 		if (party == null || StringUtils.isBlank(party.getEmailAddress())) {
-			throw new ValidationException("Required parameter email address were not provided");
+			throw new ValidationException("Required parameter email address was not provided");
 		}
 		return partyDao.readByEmailUserTypeNameAndState(party);
 	}
