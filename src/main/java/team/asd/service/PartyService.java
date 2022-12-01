@@ -1,11 +1,14 @@
 package team.asd.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.dao.PartyDao;
 import team.asd.entity.Party;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
+
+import java.util.List;
 
 @Service
 public class PartyService {
@@ -21,6 +24,20 @@ public class PartyService {
 			throw new ValidationException("Wrong id was provided");
 		}
 		return partyDao.readById(id);
+	}
+
+	public List<Party> readByUserTypeNameAndState(Party party) {
+		if (ValidationUtil.isWrongRequiredFields(party)) {
+			throw new ValidationException("Required parameter name were not provided");
+		}
+		return partyDao.readByUserTypeNameAndState(party);
+	}
+
+	public List<Party> readByEmailUserTypeNameAndState(Party party) {
+		if (party == null || StringUtils.isBlank(party.getEmailAddress())) {
+			throw new ValidationException("Required parameter email address were not provided");
+		}
+		return partyDao.readByEmailUserTypeNameAndState(party);
 	}
 
 	public void create(Party party) {
