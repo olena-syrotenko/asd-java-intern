@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.asd.mapper.ManagerToChannelMapper">
+	<resultMap id="ManagerToChannelResultMap" type="team.asd.entity.ManagerToChannel">
+		<id property="id" column="id"/>
+		<result property="propertyManagerId" column="property_manager_id"/>
+		<result property="channelPartnerId" column="channel_partner_id"/>
+		<result property="channelPartnerCommission" column="channel_partner_commission"/>
+		<result property="isFundsHolder" column="funds_holder"/>
+		<result property="isNetRate" column="net_rate"/>
+		<result property="version" column="version"/>
+	</resultMap>
+
+	<sql id="ManagerToChannelColumnList">
+		id, property_manager_id, channel_partner_id, channel_partner_commission, funds_holder, net_rate, version
+	</sql>
+
+	<select id="readById" parameterType="int" resultMap="ManagerToChannelResultMap">
+		SELECT
+		<include refid="ManagerToChannelColumnList"/>
+		FROM manager_to_channel
+		WHERE id = #{id}
+	</select>
+
+	<insert id="create" parameterType="team.asd.entity.ManagerToChannel">
+		INSERT INTO manager_to_channel(property_manager_id, channel_partner_id, channel_partner_commission, funds_holder, net_rate)
+		VALUES (#{propertyManagerId}, #{channelPartnerId}, #{channelPartnerCommission}, #{isFundsHolder}, #{isNetRate})
+	</insert>
+
+	<update id="update" parameterType="team.asd.entity.ManagerToChannel">
+		UPDATE manager_to_channel
+		<set>
+			<if test="propertyManagerId != null">property_manager_id = #{propertyManagerId},</if>
+			<if test="channelPartnerId != null">channel_partner_id = #{channelPartnerId},</if>
+			<if test="channelPartnerCommission != null">channel_partner_commission = #{channelPartnerCommission},</if>
+			<if test="isFundsHolder != null">funds_holder = #{isFundsHolder},</if>
+			<if test="isNetRate != null">net_rate = #{isNetRate}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="int">
+		DELETE
+		FROM manager_to_channel
+		WHERE id = #{id}
+	</delete>
+</mapper>
