@@ -1,11 +1,14 @@
 package team.asd.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.dao.ChannelPartnerDao;
 import team.asd.entity.ChannelPartner;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
+
+import java.util.List;
 
 @Service
 public class ChannelPartnerService {
@@ -21,6 +24,17 @@ public class ChannelPartnerService {
 			throw new ValidationException("Wrong id was provided");
 		}
 		return channelPartnerDao.readById(id);
+	}
+
+	public List<ChannelPartner> readByAbbreviationMask(String abbreviationMask) {
+		if (StringUtils.isBlank(abbreviationMask)) {
+			throw new ValidationException("Wrong abbreviation was provided");
+		}
+		return channelPartnerDao.readByAbbreviationMask(abbreviationMask);
+	}
+
+	public ChannelPartner readByPartyIdState(Integer partyId, String state) {
+		return channelPartnerDao.readByPartyIdState(partyId, state);
 	}
 
 	public void create(ChannelPartner channelPartner) {
