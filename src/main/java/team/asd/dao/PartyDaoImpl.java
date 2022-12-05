@@ -22,13 +22,13 @@ public class PartyDaoImpl implements PartyDao {
     }
 
     @Override
-    public List<Party> readByUserTypeNameAndState(Party party) {
-        return partyMapper.readByUserTypeNameAndState(party);
+    public List<Party> readByUserTypeNameState(String userType, String name, String state) {
+        return partyMapper.readByUserTypeNameState(userType, name, state);
     }
 
     @Override
-    public List<Party> readByEmailUserTypeNameAndState(Party party) {
-        return partyMapper.readByEmailUserTypeNameAndState(party);
+    public List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state) {
+        return partyMapper.readByEmailUserTypeNameState(emailAddress, userType, name, state);
     }
 
     @Override

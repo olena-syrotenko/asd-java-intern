@@ -9,9 +9,9 @@ import java.util.List;
 public interface PartyMapper {
 	Party readById(Integer id);
 
-	List<Party> readByUserTypeNameAndState(Party party);
+	List<Party> readByUserTypeNameState(String userType, String name, String state);
 
-	List<Party> readByEmailUserTypeNameAndState(Party party);
+	List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state);
 
 	void create(Party party);
 

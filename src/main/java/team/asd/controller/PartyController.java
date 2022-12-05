@@ -1,6 +1,5 @@
 package team.asd.controller;
 
-import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import team.asd.constants.PartyState;
-import team.asd.constants.UserType;
 import team.asd.dto.PartyDto;
 import team.asd.entity.Party;
 import team.asd.service.PartyService;
@@ -36,30 +33,19 @@ public class PartyController {
 	}
 
 	@GetMapping("/parties-by-name")
-	public List<PartyDto> getPartyByUserTypeNameAndState(@RequestParam(name = "name") String name,
-			@RequestParam(name = "userType", required = false) String userType, @RequestParam(name = "state", required = false) String state) {
-		Party partyParameters = Party.builder()
-				.userType(EnumUtils.getEnumIgnoreCase(UserType.class, userType))
-				.name(name)
-				.state(EnumUtils.getEnumIgnoreCase(PartyState.class, state))
-				.build();
-		return partyService.readByUserTypeNameAndState(partyParameters)
+	public List<PartyDto> getPartyByUserTypeNameState(@RequestParam(name = "userType", required = false) String userType,
+			@RequestParam(name = "name") String name, @RequestParam(name = "state", required = false) String state) {
+		return partyService.readByUserTypeNameState(userType, name, state)
 				.stream()
 				.map(PartyUtil::convertToDto)
 				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/parties-by-email")
-	public List<PartyDto> getPartyByEmailUserTypeNameAndState(@RequestParam(name = "emailAddress") String emailAddress,
-			@RequestParam(name = "name", required = false) String name, @RequestParam(name = "userType", required = false) String userType,
+	public List<PartyDto> getPartyByEmailUserTypeNameState(@RequestParam(name = "emailAddress") String emailAddress,
+			@RequestParam(name = "userType", required = false) String userType, @RequestParam(name = "name", required = false) String name,
 			@RequestParam(name = "state", required = false) String state) {
-		Party partyParameters = Party.builder()
-				.emailAddress(emailAddress)
-				.userType(EnumUtils.getEnumIgnoreCase(UserType.class, userType))
-				.name(name)
-				.state(EnumUtils.getEnumIgnoreCase(PartyState.class, state))
-				.build();
-		return partyService.readByEmailUserTypeNameAndState(partyParameters)
+		return partyService.readByEmailUserTypeNameState(emailAddress, userType, name, state)
 				.stream()
 				.map(PartyUtil::convertToDto)
 				.collect(Collectors.toList());

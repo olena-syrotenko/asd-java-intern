@@ -26,7 +26,7 @@
 		WHERE id = #{id}
 	</select>
 
-	<select id="readByUserTypeNameAndState" parameterType="team.asd.entity.Party" resultMap="PartyResultMap">
+	<select id="readByUserTypeNameState" parameterType="java.lang.String" resultMap="PartyResultMap">
 		SELECT
 		<include refid="partyColumnList"/>
 		FROM party
@@ -39,7 +39,7 @@
 		</if>
 	</select>
 
-	<select id="readByEmailUserTypeNameAndState" parameterType="team.asd.entity.Party" resultMap="PartyResultMap">
+	<select id="readByEmailUserTypeNameState" parameterType="java.lang.String" resultMap="PartyResultMap">
 		SELECT
 		<include refid="partyColumnList"/>
 		FROM party

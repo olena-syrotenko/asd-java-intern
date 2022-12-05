@@ -26,18 +26,18 @@ public class PartyService {
 		return partyDao.readById(id);
 	}
 
-	public List<Party> readByUserTypeNameAndState(Party party) {
-		if (ValidationUtil.isWrongRequiredFields(party)) {
+	public List<Party> readByUserTypeNameState(String userType, String name, String state) {
+		if (StringUtils.isBlank(name)) {
 			throw new ValidationException("Required parameter name was not provided");
 		}
-		return partyDao.readByUserTypeNameAndState(party);
+		return partyDao.readByUserTypeNameState(userType, name, state);
 	}
 
-	public List<Party> readByEmailUserTypeNameAndState(Party party) {
-		if (party == null || StringUtils.isBlank(party.getEmailAddress())) {
+	public List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state) {
+		if (StringUtils.isBlank(emailAddress)) {
 			throw new ValidationException("Required parameter email address was not provided");
 		}
-		return partyDao.readByEmailUserTypeNameAndState(party);
+		return partyDao.readByEmailUserTypeNameState(emailAddress, userType, name, state);
 	}
 
 	public void create(Party party) {

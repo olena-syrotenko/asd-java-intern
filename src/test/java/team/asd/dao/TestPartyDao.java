@@ -11,12 +11,12 @@ public class TestPartyDao implements PartyDao {
 	}
 
 	@Override
-	public List<Party> readByUserTypeNameAndState(Party party) {
+	public List<Party> readByUserTypeNameState(String userType, String name, String state) {
 		return null;
 	}
 
 	@Override
-	public List<Party> readByEmailUserTypeNameAndState(Party party) {
+	public List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state) {
 		return null;
 	}
 
