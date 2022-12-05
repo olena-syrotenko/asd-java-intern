@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import team.asd.dao.ChannelPartnerDao;
+import team.asd.dao.ManagerToChannelDao;
 import team.asd.dao.TestChannelPartnerDao;
+import team.asd.dao.TestManagerToChannelDao;
 import team.asd.entity.ChannelPartner;
 import team.asd.exceptions.ValidationException;
 
@@ -14,12 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ChannelPartnerServiceTest {
 	private static final ChannelPartnerDao channelPartnerDao = new TestChannelPartnerDao();
+	private static final ManagerToChannelDao managerToChannelDao = new TestManagerToChannelDao();
 	private static ChannelPartnerService channelPartnerService;
 	private ChannelPartner channelPartner;
 
 	@BeforeAll
 	public static void setUp(){
-		channelPartnerService = new ChannelPartnerService(channelPartnerDao);
+		channelPartnerService = new ChannelPartnerService(channelPartnerDao, managerToChannelDao);
 	}
 
 	@BeforeEach

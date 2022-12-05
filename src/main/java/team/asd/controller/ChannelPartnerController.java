@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.asd.dto.ChannelPartnerDto;
+import team.asd.dto.ManagerToChannelDto;
 import team.asd.entity.ChannelPartner;
+import team.asd.entity.ManagerToChannel;
 import team.asd.service.ChannelPartnerService;
 import team.asd.util.ChannelPartnerUtil;
+import team.asd.util.ManagerToChannelUtil;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -46,11 +49,39 @@ public class ChannelPartnerController {
 		return ChannelPartnerUtil.convertToDto(channelPartnerService.readByPartyIdState(partyId, state));
 	}
 
+	@GetMapping("/manager-to-channel")
+	public ManagerToChannelDto readManagerByPropertyManagerIdChannelPartnerId(
+			@RequestParam(name = "propertyManagerId", required = false) Integer propertyManagerId,
+			@RequestParam(name = "channelPartnerId", required = false) Integer channelPartnerId) {
+
+		return ManagerToChannelUtil.convertToDto(channelPartnerService.readManagerByPropManagerIdChanPartnerId(propertyManagerId, channelPartnerId));
+	}
+
+	@GetMapping("/managers-to-channel")
+	public List<ManagerToChannelDto> readManagersByChannelPartnerIdNetRate(@RequestParam(name = "channelPartnerId") Integer channelPartnerId,
+			@RequestParam(name = "netRate", required = false) Integer netRate) {
+		return channelPartnerService.readManagersByChannelPartnerIdNetRate(channelPartnerId, netRate)
+				.stream()
+				.map(ManagerToChannelUtil::convertToDto)
+				.collect(Collectors.toList());
+	}
+
 	@PostMapping("/channel-partner/")
 	public ChannelPartnerDto createChannelPartner(@RequestBody @Valid ChannelPartnerDto channelPartnerDto) {
 		ChannelPartner channelPartner = ChannelPartnerUtil.convertToEntity(channelPartnerDto);
 		channelPartnerService.create(channelPartner);
 		return ChannelPartnerUtil.convertToDto(channelPartner);
+	}
+
+	@PostMapping("/managers-to-channels/")
+	public List<ManagerToChannelDto> createManagerToChannels(@RequestBody List<@Valid ManagerToChannelDto> managerToChannelDto) {
+		List<ManagerToChannel> managerToChannels = managerToChannelDto.stream()
+				.map(ManagerToChannelUtil::convertToEntity)
+				.collect(Collectors.toList());
+		channelPartnerService.createManagerToChannels(managerToChannels);
+		return managerToChannels.stream()
+				.map(ManagerToChannelUtil::convertToDto)
+				.collect(Collectors.toList());
 	}
 
 	@PutMapping("/channel-partner/")
