@@ -23,6 +23,13 @@ public class PropertyManagerInfoService {
 		return propertyManagerInfoDao.readById(id);
 	}
 
+	public PropertyManagerInfo readByPmIdState(Integer pmId, String state) {
+		if (ValidationUtil.isWrongId(pmId)) {
+			throw new ValidationException("Wrong required parameter pmId");
+		}
+		return propertyManagerInfoDao.readByPmIdState(pmId, state);
+	}
+
 	public void create(PropertyManagerInfo propertyManagerInfo) {
 		if (ValidationUtil.isWrongRequiredFields(propertyManagerInfo)) {
 			throw new ValidationException("Wrong PropertyManagerInfo object was provided");
