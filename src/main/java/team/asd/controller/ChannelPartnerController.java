@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@ApiOperation("ChannelPartner Api")
 public class ChannelPartnerController {
 	private final ChannelPartnerService channelPartnerService;
 
@@ -34,17 +35,16 @@ public class ChannelPartnerController {
 		this.channelPartnerService = channelPartnerService;
 	}
 
-	@ApiOperation(value = "Get a channel partner by id", notes = "Returns a channel partner as per the id")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed") })
+	@ApiOperation(value = "Get a channel partner by id", notes = "For valid response provide id >= 1. Returns a channel partner as per the id")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"), @ApiResponse(code = 400, message = "Wrong id was provided") })
 	@GetMapping("/channel-partner/{id}")
 	public ChannelPartnerDto getChannelPartnerById(@PathVariable @ApiParam(name = "id", value = "Channel partner id", example = "1") Integer id) {
 		return ChannelPartnerUtil.convertToDto(channelPartnerService.readById(id));
 	}
 
-	@ApiOperation(value = "Get a channel partner by abbreviation", notes = "Returns a channel partner as per the abbreviation")
+	@ApiOperation(value = "Get a channel partner by abbreviation", notes = "For valid response provide abbreviation wth at least one character. Returns a channel partner as per the abbreviation")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed") })
+			@ApiResponse(code = 400, message = "Wrong abbreviation was provided") })
 	@GetMapping("/channel-partners")
 	public List<ChannelPartnerDto> getChannelPartnersByAbbreviationMask(
 			@RequestParam(name = "abbreviationMask") @ApiParam(name = "abbreviationMask", value = "Abbreviation of channel", example = "ABBR") String abbreviationMask) {
@@ -55,8 +55,7 @@ public class ChannelPartnerController {
 	}
 
 	@ApiOperation(value = "Get a channel partner by party id and state", notes = "Returns a channel partner as per the party id and state")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed") })
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"), @ApiResponse(code = 400, message = "") })
 	@GetMapping("/channel-partner")
 	public ChannelPartnerDto getChannelPartnerByPartyIdState(
 			@RequestParam(name = "partyId", required = false) @ApiParam(name = "partyId", value = "Party id", example = "1") Integer partyId,
@@ -64,9 +63,9 @@ public class ChannelPartnerController {
 		return ChannelPartnerUtil.convertToDto(channelPartnerService.readByPartyIdState(partyId, state));
 	}
 
-	@ApiOperation(value = "Get a manager to channel by PM id and channel partner id", notes = "Returns a manager to channel as per the PM id and channel partner id")
+	@ApiOperation(value = "Get a manager to channel by PM id and channel partner id", notes = "At least one of parameters is required. Returns a manager to channel as per the PM id and channel partner id")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed") })
+			@ApiResponse(code = 400, message = "Required parameter was not provided") })
 	@GetMapping("/manager-to-channel")
 	public ManagerToChannelDto readManagerByPropertyManagerIdChannelPartnerId(
 			@RequestParam(name = "propertyManagerId", required = false) @ApiParam(name = "propertyManagerId", value = "Property manager id", example = "1") Integer propertyManagerId,
@@ -75,9 +74,9 @@ public class ChannelPartnerController {
 		return ManagerToChannelUtil.convertToDto(channelPartnerService.readManagerByPropManagerIdChanPartnerId(propertyManagerId, channelPartnerId));
 	}
 
-	@ApiOperation(value = "Get a managers to channel by channel partner id and net rate settings", notes = "Returns a managers to channel as per the channel partner id and net rate")
+	@ApiOperation(value = "Get a managers to channel by channel partner id and net rate settings", notes = "Channel partner id is required with value >= 1. Returns a managers to channel as per the channel partner id and net rate")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed") })
+			@ApiResponse(code = 400, message = "Wrong channel partner id was provided") })
 	@GetMapping("/managers-to-channel")
 	public List<ManagerToChannelDto> readManagersByChannelPartnerIdNetRate(
 			@RequestParam(name = "channelPartnerId") @ApiParam(name = "channelPartnerId", value = "Channel partner id", example = "2") Integer channelPartnerId,
@@ -88,9 +87,9 @@ public class ChannelPartnerController {
 				.collect(Collectors.toList());
 	}
 
-	@ApiOperation(value = "Create a new channel partner", notes = "Returns a channel partner with create options")
+	@ApiOperation(value = "Create a new channel partner", notes = "For valid response provide party id >= 1 and non-empty channel name and abbreviation. Returns a channel partner with create options")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully created"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed and channel partner was not created") })
+			@ApiResponse(code = 400, message = "Wrong ChannelPartner object was provided") })
 	@PostMapping("/channel-partner/")
 	public ChannelPartnerDto createChannelPartner(
 			@RequestBody @Valid @ApiParam(name = "channelPartnerDto", value = "Channel partner object that needs to be saved") ChannelPartnerDto channelPartnerDto) {
@@ -99,9 +98,9 @@ public class ChannelPartnerController {
 		return ChannelPartnerUtil.convertToDto(channelPartner);
 	}
 
-	@ApiOperation(value = "Save a list of managers to channels", notes = "Returns a list of managers to channels with create options")
+	@ApiOperation(value = "Save a list of managers to channels", notes = "For valid response provide non-empty list of object with property manager id and channel partner id values >= 1. Returns a list of managers to channels with create options")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully created"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed and managers to channel were not created") })
+			@ApiResponse(code = 400, message = "Empty ManagerToChannel list was provided. Wrong ManagerToChannel object was provided") })
 	@PostMapping("/managers-to-channels/")
 	public List<ManagerToChannelDto> createManagerToChannels(
 			@RequestBody @ApiParam(name = "managerToChannelDto", value = "Managers to channels list that needs to be saved") List<@Valid ManagerToChannelDto> managerToChannelDto) {
@@ -114,9 +113,9 @@ public class ChannelPartnerController {
 				.collect(Collectors.toList());
 	}
 
-	@ApiOperation(value = "Update a channel partner", notes = "Returns a channel partner with update options")
+	@ApiOperation(value = "Update a channel partner", notes = " For valid response provide id value >= 1. Returns a channel partner with provided update options")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully created"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed and channel partner was not updated") })
+			@ApiResponse(code = 400, message = "Wrong ChannelPartner object was provided") })
 	@PutMapping("/channel-partner/")
 	public ChannelPartnerDto updateChannelPartner(
 			@RequestBody @Valid @ApiParam(name = "channelPartnerDto", value = "Channel partner information that needs to be updated") ChannelPartnerDto channelPartnerDto) {
@@ -134,9 +133,8 @@ public class ChannelPartnerController {
 		return ChannelPartnerUtil.convertToDto(channelPartner);
 	}
 
-	@ApiOperation(value = "Delete a channel partner", notes = "Returns an id of channel partner that was deleted")
-	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully deleted"),
-			@ApiResponse(code = 400, message = "Bad request - The request was malformed and channel partner was not deleted") })
+	@ApiOperation(value = "Set channel partner state to Suspended", notes = " For valid response provide id value >= 1. Returns an id of channel partner that was updated")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully updated state"), @ApiResponse(code = 400, message = "Wrong id was provided") })
 	@DeleteMapping("/channel-partner/{id}")
 	public Integer deleteChannelPartnerById(@PathVariable Integer id) {
 		channelPartnerService.delete(id);
