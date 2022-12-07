@@ -21,6 +21,11 @@ public class TestPartyDao implements PartyDao {
 	}
 
 	@Override
+	public List<Party> readByChannelMaskUserType(String mask, String userType) {
+		return null;
+	}
+
+	@Override
 	public void create(Party party) {
 
 	}

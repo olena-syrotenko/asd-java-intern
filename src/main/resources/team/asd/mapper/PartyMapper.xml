@@ -16,7 +16,7 @@
 	</resultMap>
 
 	<sql id="partyColumnList">
-		id, name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version
+		party.id, party.name, party.state, party.postal_address, party.email_address, party.mobile_phone, party.password, party.currency, party.user_type, party.version
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="PartyResultMap">
@@ -55,6 +55,15 @@
 		</if>
 	</select>
 
+	<select id="readByChannelMaskUserType" parameterType="java.lang.String" resultMap="PartyResultMap">
+		<bind name="channelNameStartsWith" value="mask + '%'"/>
+		SELECT
+		<include refid="partyColumnList"/>
+		FROM party JOIN channel_partner ON party.id = channel_partner.party_id
+		WHERE channel_name LIKE #{channelNameStartsWith}
+		AND user_type = #{userType}
+		AND party.state IN ('Created', 'Suspended')
+	</select>
 
 	<insert id="create" parameterType="team.asd.entity.Party">
 		INSERT INTO party(name, state, postal_address, email_address, mobile_phone, password, currency, user_type)

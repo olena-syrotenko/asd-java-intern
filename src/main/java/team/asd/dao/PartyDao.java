@@ -11,6 +11,8 @@ public interface PartyDao {
 
 	List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state);
 
+	List<Party> readByChannelMaskUserType(String mask, String userType);
+
 	void create(Party party);
 
 	void update(Party party);

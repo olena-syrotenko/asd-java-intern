@@ -32,6 +32,11 @@ public class PartyDaoImpl implements PartyDao {
     }
 
     @Override
+    public List<Party> readByChannelMaskUserType(String mask, String userType) {
+        return partyMapper.readByChannelMaskUserType(mask, userType);
+    }
+
+    @Override
     public void create(Party party) {
         partyMapper.create(party);
     }

@@ -40,6 +40,13 @@ public class PartyService {
 		return partyDao.readByEmailUserTypeNameState(emailAddress, userType, name, state);
 	}
 
+	public List<Party> readByChannelMaskUserType(String mask, String userType) {
+		if (StringUtils.isAnyBlank(mask, userType)) {
+			throw new ValidationException("Required parameters were not provided");
+		}
+		return partyDao.readByChannelMaskUserType(mask, userType);
+	}
+
 	public void create(Party party) {
 		if (ValidationUtil.isWrongRequiredFields(party)) {
 			throw new ValidationException("Wrong Party object was provided");
