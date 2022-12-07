@@ -74,7 +74,7 @@ public class ChannelPartnerController {
 		return ManagerToChannelUtil.convertToDto(channelPartnerService.readManagerByPropManagerIdChanPartnerId(propertyManagerId, channelPartnerId));
 	}
 
-	@ApiOperation(value = "Get a managers to channel by channel partner id and net rate settings", notes = "Channel partner id is required with value >= 1. Returns a managers to channel as per the channel partner id and net rate")
+	@ApiOperation(value = "Get managers to channel by channel partner id and net rate settings", notes = "Channel partner id is required with value >= 1. Returns managers to channel as per the channel partner id and net rate")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
 			@ApiResponse(code = 400, message = "Wrong channel partner id was provided") })
 	@GetMapping("/managers-to-channel")
@@ -82,6 +82,18 @@ public class ChannelPartnerController {
 			@RequestParam(name = "channelPartnerId") @ApiParam(name = "channelPartnerId", value = "Channel partner id", example = "2") Integer channelPartnerId,
 			@RequestParam(name = "netRate", required = false) @ApiParam(name = "netRate", value = "Net rate settings", example = "0") Integer netRate) {
 		return channelPartnerService.readManagersByChannelPartnerIdNetRate(channelPartnerId, netRate)
+				.stream()
+				.map(ManagerToChannelUtil::convertToDto)
+				.collect(Collectors.toList());
+	}
+
+	@ApiOperation(value = "Get managers to channels by funds holder setting", notes = "For valid response provide funds holder value between 0 and 1. Returns managers to channels as per the funds holder setting with state Initial or Suspended of ChannelPartner and PropertyManagerInfo")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
+			@ApiResponse(code = 400, message = "Wrong funds holder parameter was provided") })
+	@GetMapping("/managers-to-channels/{fundsHolder}")
+	public List<ManagerToChannelDto> getManagersToChannelsByFundsHolder(
+			@PathVariable @ApiParam(name = "fundsHolder", value = "Funds holder setting", example = "0") Integer fundsHolder) {
+		return channelPartnerService.readManagersToChannelsByFundsHolder(fundsHolder)
 				.stream()
 				.map(ManagerToChannelUtil::convertToDto)
 				.collect(Collectors.toList());

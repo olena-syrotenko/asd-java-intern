@@ -57,6 +57,13 @@ public class ChannelPartnerService {
 		return managerToChannelDao.readByChannelPartnerIdNetRate(channelPartnerId, netRate);
 	}
 
+	public List<ManagerToChannel> readManagersToChannelsByFundsHolder(Integer fundsHolder) {
+		if (fundsHolder == null || fundsHolder > 1 || fundsHolder < 0) {
+			throw new ValidationException("Wrong funds holder parameter was provided");
+		}
+		return managerToChannelDao.readByFundsHolder(fundsHolder);
+	}
+
 	public void create(ChannelPartner channelPartner) {
 		if (ValidationUtil.isWrongRequiredFields(channelPartner)) {
 			throw new ValidationException("Wrong ChannelPartner object was provided");

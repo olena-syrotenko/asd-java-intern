@@ -13,6 +13,8 @@ public interface ManagerToChannelMapper {
 
 	List<ManagerToChannel> readByChannelPartnerIdNetRate(Integer channelPartnerId, Integer netRate);
 
+	List<ManagerToChannel> readByFundsHolder(Integer fundsHolder);
+
 	void create(ManagerToChannel managerToChannel);
 
 	void createList(List<ManagerToChannel> managerToChannels);

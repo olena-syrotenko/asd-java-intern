@@ -13,7 +13,8 @@
 	</resultMap>
 
 	<sql id="ManagerToChannelColumnList">
-		id, property_manager_id, channel_partner_id, channel_partner_commission, funds_holder, net_rate, version
+		manager_to_channel.id, manager_to_channel.property_manager_id, manager_to_channel.channel_partner_id, manager_to_channel.channel_partner_commission,
+		manager_to_channel.funds_holder, manager_to_channel.net_rate, manager_to_channel.version
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="ManagerToChannelResultMap">
@@ -46,6 +47,15 @@
 		<if test="propertyManagerId != null">
 			AND net_rate = #{netRate}
 		</if>
+	</select>
+
+	<select id="readByFundsHolder" parameterType="int" resultMap="ManagerToChannelResultMap">
+		SELECT
+		<include refid="ManagerToChannelColumnList"/>
+		FROM manager_to_channel JOIN channel_partner ON manager_to_channel.channel_partner_id = channel_partner.id
+		JOIN property_manager_info ON manager_to_channel.property_manager_id = property_manager_info.id
+		WHERE channel_partner.state IN ('Suspended', 'Initial') AND property_manager_info.state IN ('Suspended', 'Initial')
+		AND channel_partner.funds_holder = #{fundsHolder} AND property_manager_info.funds_holder = #{fundsHolder}
 	</select>
 
 	<insert id="create" parameterType="team.asd.entity.ManagerToChannel">

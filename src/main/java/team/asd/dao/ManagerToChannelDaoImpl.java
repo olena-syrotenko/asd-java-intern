@@ -32,6 +32,11 @@ public class ManagerToChannelDaoImpl implements ManagerToChannelDao {
 	}
 
 	@Override
+	public List<ManagerToChannel> readByFundsHolder(Integer fundsHolder) {
+		return managerToChannelMapper.readByFundsHolder(fundsHolder);
+	}
+
+	@Override
 	public void create(ManagerToChannel managerToChannel) {
 		managerToChannelMapper.create(managerToChannel);
 	}
