@@ -9,6 +9,11 @@ public class TestPropertyManagerInfoDao implements PropertyManagerInfoDao {
 	}
 
 	@Override
+	public PropertyManagerInfo readByPmIdState(Integer pmId, String state) {
+		return null;
+	}
+
+	@Override
 	public void create(PropertyManagerInfo propertyManagerInfo) {
 
 	}

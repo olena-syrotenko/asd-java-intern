@@ -23,9 +23,43 @@
 		WHERE id = #{id}
 	</select>
 
+	<select id="readByPropManagerIdChanPartnerId" parameterType="int" resultMap="ManagerToChannelResultMap">
+		SELECT
+		<include refid="ManagerToChannelColumnList"/>
+		FROM manager_to_channel
+		<where>
+			<if test="propertyManagerId != null">
+				property_manager_id = #{propertyManagerId}
+			</if>
+			<if test="channelPartnerId != null">
+				AND channel_partner_id = #{channelPartnerId}
+			</if>
+		</where>
+		ORDER BY id DESC LIMIT 1
+	</select>
+
+	<select id="readByChannelPartnerIdNetRate" parameterType="int" resultMap="ManagerToChannelResultMap">
+		SELECT
+		<include refid="ManagerToChannelColumnList"/>
+		FROM manager_to_channel
+		WHERE channel_partner_id = #{channelPartnerId}
+		<if test="propertyManagerId != null">
+			AND net_rate = #{netRate}
+		</if>
+	</select>
+
 	<insert id="create" parameterType="team.asd.entity.ManagerToChannel">
 		INSERT INTO manager_to_channel(property_manager_id, channel_partner_id, channel_partner_commission, funds_holder, net_rate)
 		VALUES (#{propertyManagerId}, #{channelPartnerId}, #{channelPartnerCommission}, #{isFundsHolder}, #{isNetRate})
+	</insert>
+
+	<insert id="createList" parameterType="java.util.List">
+		INSERT INTO manager_to_channel(property_manager_id, channel_partner_id, channel_partner_commission, funds_holder, net_rate)
+		VALUES
+		<foreach collection="list" item="managerToChannel" index="index" open="(" separator="),(" close=")">
+			#{managerToChannel.propertyManagerId}, #{managerToChannel.channelPartnerId}, #{managerToChannel.channelPartnerCommission},
+			#{managerToChannel.isFundsHolder}, #{managerToChannel.isNetRate}
+		</foreach>
 	</insert>
 
 	<update id="update" parameterType="team.asd.entity.ManagerToChannel">

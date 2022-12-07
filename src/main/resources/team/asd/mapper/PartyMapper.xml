@@ -20,10 +20,41 @@
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="PartyResultMap">
-		SELECT <include refid="partyColumnList"/>
+		SELECT
+		<include refid="partyColumnList"/>
 		FROM party
 		WHERE id = #{id}
 	</select>
+
+	<select id="readByUserTypeNameState" parameterType="java.lang.String" resultMap="PartyResultMap">
+		SELECT
+		<include refid="partyColumnList"/>
+		FROM party
+		WHERE name = #{name}
+		<if test="userType != null">
+			AND user_type = #{userType}
+		</if>
+		<if test="state != null">
+			AND state = #{state}
+		</if>
+	</select>
+
+	<select id="readByEmailUserTypeNameState" parameterType="java.lang.String" resultMap="PartyResultMap">
+		SELECT
+		<include refid="partyColumnList"/>
+		FROM party
+		WHERE email_address = #{emailAddress}
+		<if test="userType != null">
+			AND user_type = #{userType}
+		</if>
+		<if test="name != null">
+			AND name = #{name}
+		</if>
+		<if test="state != null">
+			AND state = #{state}
+		</if>
+	</select>
+
 
 	<insert id="create" parameterType="team.asd.entity.Party">
 		INSERT INTO party(name, state, postal_address, email_address, mobile_phone, password, currency, user_type)

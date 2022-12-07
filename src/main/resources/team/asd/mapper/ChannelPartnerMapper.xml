@@ -25,6 +25,29 @@
 		WHERE id = #{id}
 	</select>
 
+	<select id="readByAbbreviationMask" parameterType="java.lang.String" resultMap="ChannelPartnerResultMap">
+		<bind name="abbreviationLikePattern" value="'%' + abbreviationMask + '%'"/>
+		SELECT
+		<include refid="ChannelPartnerColumnList"/>
+		FROM channel_partner
+		WHERE abbreviation LIKE #{abbreviationLikePattern}
+	</select>
+
+	<select id="readByPartyIdState" parameterType="map" resultMap="ChannelPartnerResultMap">
+		SELECT
+		<include refid="ChannelPartnerColumnList"/>
+		FROM channel_partner
+		<where>
+			<if test="partyId != null">
+				party_id = #{partyId}
+			</if>
+			<if test="state != null">
+				AND state = #{state}
+			</if>
+		</where>
+		ORDER BY id DESC LIMIT 1
+	</select>
+
 	<insert id="create" parameterType="team.asd.entity.ChannelPartner">
 		INSERT INTO channel_partner(party_id, abbreviation, channel_name, state, commission, bp_commission, funds_holder)
 		VALUES (#{partyId}, #{abbreviation}, #{channelName}, #{state}, #{commission}, #{bpCommission}, #{isFundsHolder})

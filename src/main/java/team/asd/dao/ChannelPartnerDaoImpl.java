@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 import team.asd.entity.ChannelPartner;
 import team.asd.mapper.ChannelPartnerMapper;
 
+import java.util.List;
+
 @Repository
 public class ChannelPartnerDaoImpl implements ChannelPartnerDao {
 	private final ChannelPartnerMapper channelPartnerMapper;
@@ -17,6 +19,16 @@ public class ChannelPartnerDaoImpl implements ChannelPartnerDao {
 	@Override
 	public ChannelPartner readById(Integer id) {
 		return channelPartnerMapper.readById(id);
+	}
+
+	@Override
+	public List<ChannelPartner> readByAbbreviationMask(String abbreviationMask) {
+		return channelPartnerMapper.readByAbbreviationMask(abbreviationMask);
+	}
+
+	@Override
+	public ChannelPartner readByPartyIdState(Integer partyId, String state) {
+		return channelPartnerMapper.readByPartyIdState(partyId, state);
 	}
 
 	@Override

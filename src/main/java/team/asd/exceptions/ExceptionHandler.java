@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -39,9 +40,17 @@ public class ExceptionHandler {
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), message);
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage catchMissingServletRequestParameterException(MissingServletRequestParameterException exception) {
+        String message = "Missing required parameter " + exception.getParameterName();
+        log.error(message, exception);
+        return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), message);
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage catchException(Exception exception){
+    public ErrorMessage catchException(Exception exception) {
         log.error(exception.getMessage(), exception);
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), "Unknown exception");
     }

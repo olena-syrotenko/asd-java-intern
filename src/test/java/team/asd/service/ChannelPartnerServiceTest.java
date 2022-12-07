@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import team.asd.constants.ChannelPartnerState;
 import team.asd.dao.ChannelPartnerDao;
+import team.asd.dao.ManagerToChannelDao;
 import team.asd.data.ChannelPartnerData;
 import team.asd.entity.ChannelPartner;
 import team.asd.exceptions.ValidationException;
@@ -27,6 +28,8 @@ import static org.mockito.Mockito.when;
 class ChannelPartnerServiceTest {
 	@Mock
 	private ChannelPartnerDao channelPartnerDao;
+	@Mock
+	private ManagerToChannelDao managerToChannelDao;
 	private ChannelPartnerService channelPartnerService;
 	private ChannelPartner channelPartner;
 	private static ChannelPartner mockChannelPartner;
@@ -34,7 +37,7 @@ class ChannelPartnerServiceTest {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		channelPartnerService = new ChannelPartnerService(channelPartnerDao);
+		channelPartnerService = new ChannelPartnerService(channelPartnerDao, managerToChannelDao);
 		channelPartner = new ChannelPartner();
 		mockChannelPartner = null;
 	}

@@ -3,6 +3,7 @@ package team.asd.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import team.asd.entity.ChannelPartner;
+import team.asd.entity.ManagerToChannel;
 import team.asd.entity.Party;
 import team.asd.entity.PropertyManagerInfo;
 import team.asd.exceptions.InvokeMethodException;
@@ -33,5 +34,9 @@ public class ValidationUtil {
 
 	public static boolean isWrongRequiredFields(PropertyManagerInfo propertyManagerInfo) {
 		return propertyManagerInfo == null || ValidationUtil.isWrongId(propertyManagerInfo.getPmId());
+	}
+
+	public static boolean isWrongRequiredFields(ManagerToChannel managerToChannel) {
+		return managerToChannel == null || isWrongId(managerToChannel.getChannelPartnerId()) || isWrongId(managerToChannel.getPropertyManagerId());
 	}
 }

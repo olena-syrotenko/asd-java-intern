@@ -3,9 +3,15 @@ package team.asd.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import team.asd.entity.Party;
 
+import java.util.List;
+
 @Mapper
 public interface PartyMapper {
 	Party readById(Integer id);
+
+	List<Party> readByUserTypeNameState(String userType, String name, String state);
+
+	List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state);
 
 	void create(Party party);
 

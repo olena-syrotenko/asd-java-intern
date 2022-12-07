@@ -26,6 +26,17 @@
 		WHERE id = #{id}
 	</select>
 
+	<select id="readByPmIdState" parameterType="map" resultMap="PropertyManagerInfoResultMap">
+		SELECT
+		<include refid="PropertyManagerInfoColumnList"/>
+		FROM property_manager_info
+		WHERE pm_id = #{pmId}
+		<if test="state != null">
+			AND state = #{state}
+		</if>
+		ORDER BY id DESC LIMIT 1
+	</select>
+
 	<insert id="create" parameterType="team.asd.entity.PropertyManagerInfo">
 		INSERT INTO property_manager_info(pm_id, funds_holder, number_of_payments, payment_amount, payment_type, state, commission, net_rate)
 		VALUES (#{pmId}, #{isFundsHolder}, #{numberOfPayments}, #{paymentAmount}, #{paymentType}, #{state}, #{commission}, #{isNetRate})

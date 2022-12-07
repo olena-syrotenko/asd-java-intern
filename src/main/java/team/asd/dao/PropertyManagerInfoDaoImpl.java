@@ -20,6 +20,11 @@ public class PropertyManagerInfoDaoImpl implements PropertyManagerInfoDao {
 	}
 
 	@Override
+	public PropertyManagerInfo readByPmIdState(Integer pmId, String state) {
+		return propertyManagerInfoMapper.readByPmIdState(pmId, state);
+	}
+
+	@Override
 	public void create(PropertyManagerInfo propertyManagerInfo) {
 		propertyManagerInfoMapper.create(propertyManagerInfo);
 	}

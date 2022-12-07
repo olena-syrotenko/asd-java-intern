@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 import team.asd.entity.Party;
 import team.asd.mapper.PartyMapper;
 
+import java.util.List;
+
 @Repository
 public class PartyDaoImpl implements PartyDao {
     private final PartyMapper partyMapper;
@@ -17,6 +19,16 @@ public class PartyDaoImpl implements PartyDao {
     @Override
     public Party readById(Integer id) {
         return partyMapper.readById(id);
+    }
+
+    @Override
+    public List<Party> readByUserTypeNameState(String userType, String name, String state) {
+        return partyMapper.readByUserTypeNameState(userType, name, state);
+    }
+
+    @Override
+    public List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state) {
+        return partyMapper.readByEmailUserTypeNameState(emailAddress, userType, name, state);
     }
 
     @Override
