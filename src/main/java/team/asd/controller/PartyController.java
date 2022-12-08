@@ -39,7 +39,7 @@ public class PartyController {
 		return PartyUtil.convertToDto(partyService.readById(id));
 	}
 
-	@ApiOperation(value = "Get parties by name, user type and state", notes = "Name is required. Returns a party as per name, user type and state")
+	@ApiOperation(value = "Get parties by name, user type and state", notes = "Name is required. Returns a list of parties as per name, user type and state")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
 			@ApiResponse(code = 400, message = "Required parameter name was not provided") })
 	@GetMapping("/parties-by-name")
@@ -53,7 +53,7 @@ public class PartyController {
 				.collect(Collectors.toList());
 	}
 
-	@ApiOperation(value = "Get parties by email, name, user type and state", notes = "Email is required. Returns a party as per email, name, user type and state")
+	@ApiOperation(value = "Get parties by email, name, user type and state", notes = "Email is required. Returns a list of parties as per email, name, user type and state")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
 			@ApiResponse(code = 400, message = "Required parameter email address was not provided") })
 	@GetMapping("/parties-by-email")
@@ -63,6 +63,19 @@ public class PartyController {
 			@RequestParam(name = "name", required = false) @ApiParam(name = "name", value = "Name of party", example = "test party") String name,
 			@RequestParam(name = "state", required = false) @ApiParam(name = "state", value = "Party state", example = "Created") String state) {
 		return partyService.readByEmailUserTypeNameState(emailAddress, userType, name, state)
+				.stream()
+				.map(PartyUtil::convertToDto)
+				.collect(Collectors.toList());
+	}
+
+	@ApiOperation(value = "Get parties by channel name mask and user type", notes = "For valid response provide non-empty mask ans user type. Returns a list of parties as per the user type with states Created or Suspended and the channel name starting with a mask")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
+			@ApiResponse(code = 400, message = "Required parameters were not provided") })
+	@GetMapping("/parties-by-mask")
+	public List<PartyDto> getByChannelMaskUserType(
+			@RequestParam(name = "mask") @ApiParam(name = "mask", value = "Channel name mask", example = "test") String mask,
+			@RequestParam(name = "userType") @ApiParam(name = "userType", value = "User type", example = "Customer") String userType) {
+		return partyService.readByChannelMaskUserType(mask, userType)
 				.stream()
 				.map(PartyUtil::convertToDto)
 				.collect(Collectors.toList());

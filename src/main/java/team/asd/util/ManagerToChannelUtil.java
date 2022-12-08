@@ -15,7 +15,7 @@ public class ManagerToChannelUtil {
 				.channelPartnerId(managerToChannelDto.getChannelPartnerId())
 				.channelPartnerCommission(managerToChannelDto.getChannelPartnerCommission())
 				.isFundsHolder(BooleanUtils.toBooleanObject(managerToChannelDto.getIsFundsHolder()))
-				.isNetRate(BooleanUtils.toBooleanObject(managerToChannelDto.getIsFundsHolder()))
+				.isNetRate(BooleanUtils.toBooleanObject(managerToChannelDto.getIsNetRate()))
 				.build();
 	}
 
@@ -29,7 +29,7 @@ public class ManagerToChannelUtil {
 				.channelPartnerId(managerToChannel.getChannelPartnerId())
 				.channelPartnerCommission(managerToChannel.getChannelPartnerCommission())
 				.isFundsHolder(BooleanUtils.toIntegerObject(managerToChannel.getIsFundsHolder()))
-				.isNetRate(BooleanUtils.toIntegerObject(managerToChannel.getIsFundsHolder()))
+				.isNetRate(BooleanUtils.toIntegerObject(managerToChannel.getIsNetRate()))
 				.build();
 	}
 }

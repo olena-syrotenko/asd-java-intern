@@ -21,6 +21,11 @@ public class TestManagerToChannelDao implements ManagerToChannelDao{
 	}
 
 	@Override
+	public List<ManagerToChannel> readByFundsHolder(Integer fundsHolder) {
+		return null;
+	}
+
+	@Override
 	public void create(ManagerToChannel managerToChannel) {
 
 	}
