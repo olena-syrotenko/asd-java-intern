@@ -102,6 +102,19 @@ public class PartyController {
 		return PartyUtil.convertToDto(party);
 	}
 
+	@ApiOperation(value = "Update a party with 15 seconds delay", notes = "For valid response provide id value >= 1. Returns a party with provided update options")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully updated"), @ApiResponse(code = 400, message = "Wrong Party object was provided") })
+	@PutMapping("/party-with-delay/")
+	public PartyDto updatePartyWithDelay(
+			@RequestBody @Valid @ApiParam(name = "partyDto", value = "Party information that needs to be updated") PartyDto partyDto) {
+		Party party = PartyUtil.convertToEntity(partyDto);
+		if (partyDto.getState() == null) {
+			party.setState(null);
+		}
+		partyService.updateWithDelay(party);
+		return PartyUtil.convertToDto(party);
+	}
+
 	@ApiOperation(value = "Set party state to Final", notes = "For valid response provide id value >= 1. Returns an id of party that was updated")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully updated state"), @ApiResponse(code = 400, message = "Wrong id was provided") })
 	@DeleteMapping("/party/{id}")
