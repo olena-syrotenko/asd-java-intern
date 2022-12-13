@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.dao.PartyDao;
+import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
@@ -45,6 +46,13 @@ public class PartyService {
 			throw new ValidationException("Required parameters were not provided");
 		}
 		return partyDao.readByChannelMaskUserType(mask, userType);
+	}
+
+	public PartyReportDto readReportById(Integer id) {
+		if (ValidationUtil.isWrongId(id)) {
+			throw new ValidationException("Wrong id was provided");
+		}
+		return partyDao.readReportById(id);
 	}
 
 	public void create(Party party) {
