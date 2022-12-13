@@ -16,7 +16,6 @@
 	</resultMap>
 
 	<resultMap id="PartyReportResultMap" type="team.asd.dto.PartyReportDto">
-		<association property="party" javaType="team.asd.dto.PartyDto">
 			<id property='id' column='p_id'/>
 			<result property='name' column='p_name'/>
 			<result property='state' column='p_state'/>
@@ -26,7 +25,6 @@
 			<result property='password' column='p_password'/>
 			<result property='currency' column='p_currency'/>
 			<result property='userType' column='p_user_type'/>
-		</association>
 		<association property="channelPartner" javaType="team.asd.dto.PartyChannelDto">
 			<result property='abbreviation' column='cp_abbreviation'/>
 			<result property='channelName' column='cp_channel_name'/>
