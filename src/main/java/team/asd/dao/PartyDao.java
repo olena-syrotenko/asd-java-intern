@@ -22,5 +22,7 @@ public interface PartyDao {
 
 	void update(Party party);
 
+	void updateWithDelay(Party party);
+
 	void deleteById(Integer id);
 }

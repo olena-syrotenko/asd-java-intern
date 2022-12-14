@@ -7,6 +7,7 @@ import team.asd.entity.Party;
 import team.asd.mapper.PartyMapper;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Repository
 public class PartyDaoImpl implements PartyDao {
@@ -54,6 +55,17 @@ public class PartyDaoImpl implements PartyDao {
 
     @Override
     public void update(Party party) {
+        partyMapper.update(party);
+    }
+
+    @Override
+    public void updateWithDelay(Party party) {
+        try {
+            TimeUnit.SECONDS.sleep(15);
+        } catch (InterruptedException e) {
+            Thread.currentThread()
+                    .interrupt();
+        }
         partyMapper.update(party);
     }
 
