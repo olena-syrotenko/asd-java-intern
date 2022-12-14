@@ -42,6 +42,11 @@ public class TestPartyDao implements PartyDao {
 	}
 
 	@Override
+	public void updateWithDelay(Party party) {
+
+	}
+
+	@Override
 	public void deleteById(Integer id) {
 
 	}

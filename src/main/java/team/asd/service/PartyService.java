@@ -1,5 +1,6 @@
 package team.asd.service;
 
+import com.antkorwin.xsync.XSync;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,13 @@ import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class PartyService {
+	@Autowired
+	private XSync<Integer> intXSync;
 	private final PartyDao partyDao;
 
 	@Autowired
@@ -67,6 +72,16 @@ public class PartyService {
 			throw new ValidationException("Wrong Party object was provided");
 		}
 		partyDao.update(party);
+	}
+
+	public void updateWithDelay(Party party) {
+		if (ValidationUtil.isWrongUpdateObject(party)) {
+			throw new ValidationException("Wrong Party object was provided");
+		}
+		intXSync.execute(party.getId(), () -> {
+			ExecutorService executorService = Executors.newSingleThreadExecutor();
+			executorService.execute(() -> partyDao.updateWithDelay(party));
+		});
 	}
 
 	public void delete(Integer id) {
