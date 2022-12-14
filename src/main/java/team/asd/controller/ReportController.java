@@ -7,9 +7,12 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.asd.dto.PartyReportDto;
 import team.asd.service.PartyService;
+
+import java.util.List;
 
 @RestController
 @ApiOperation("Report API")
@@ -26,5 +29,15 @@ public class ReportController {
 	@GetMapping("/report/party/{partyId}")
 	public PartyReportDto getPartyReportById(@PathVariable @ApiParam(name = "partyId", value = "Party id", example = "1") Integer partyId) {
 		return partyService.readReportById(partyId);
+	}
+
+	@ApiOperation(value = "Get party reports list by page number and items per page value", notes = "For valid response provide parameters >= 1. Returns a list of party reports for pagination as per the page number and items per page value")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
+			@ApiResponse(code = 400, message = "Wrong parameters were provided") })
+	@GetMapping("/report/parties")
+	public List<PartyReportDto> getPartyReportsByPageItemsPerPage(
+			@RequestParam(name = "page") @ApiParam(name = "page", value = "Page number", example = "3") Integer page,
+			@RequestParam(name = "items") @ApiParam(name = "items", value = "Number of items per page", example = "5") Integer items) {
+		return partyService.readReportByPageItems(page, items);
 	}
 }

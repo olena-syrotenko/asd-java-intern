@@ -118,6 +118,21 @@
 		WHERE p.id = #{id} AND (cp.state IS NULL OR cp.state = 'Created') AND (pm.state IS NULL OR pm.state = 'Created')
 	</select>
 
+	<select id="readReportByPageItems" parameterType="int" resultMap="PartyReportResultMap">
+		<bind name="startItemNumber" value="(page-1)*itemsPerPage"/>
+		SELECT
+		<include refid="partyReportColumnList"/>
+		FROM party p LEFT JOIN channel_partner cp on p.id = cp.party_id LEFT JOIN property_manager_info pm on p.id = pm.pm_id
+		LEFT JOIN manager_to_channel mtc ON mtc.channel_partner_id = cp.id OR mtc.property_manager_id = pm.id
+		INNER JOIN
+		(SELECT DISTINCT p.id FROM party p LEFT JOIN channel_partner cp on p.id = cp.party_id
+		LEFT JOIN property_manager_info pm on p.id = pm.pm_id
+		LEFT JOIN manager_to_channel mtc ON mtc.channel_partner_id = cp.id OR mtc.property_manager_id = pm.id
+		WHERE (cp.state IS NULL OR cp.state = 'Created') AND (pm.state IS NULL OR pm.state = 'Created')
+		ORDER BY p.id
+		LIMIT #{startItemNumber}, #{itemsPerPage}) pagination ON pagination.id = p.id;
+	</select>
+
 	<insert id="create" parameterType="team.asd.entity.Party">
 		INSERT INTO party(name, state, postal_address, email_address, mobile_phone, password, currency, user_type)
 		VALUES (#{name}, #{state}, #{postalAddress}, #{emailAddress}, #{mobilePhone}, #{password}, #{currency}, #{userType})

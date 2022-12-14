@@ -1,5 +1,6 @@
 package team.asd.service;
 
+import org.apache.commons.lang3.ObjectUtils;
 import com.antkorwin.xsync.XSync;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,13 @@ public class PartyService {
 			throw new ValidationException("Wrong id was provided");
 		}
 		return partyDao.readReportById(id);
+	}
+
+	public List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage) {
+		if (ObjectUtils.anyNull(page, itemsPerPage) || page < 1 || itemsPerPage < 1) {
+			throw new ValidationException("Wrong parameters were provided");
+		}
+		return partyDao.readReportByPageItems(page, itemsPerPage);
 	}
 
 	public void create(Party party) {

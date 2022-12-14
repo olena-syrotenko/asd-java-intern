@@ -32,6 +32,11 @@ public class TestPartyDao implements PartyDao {
 	}
 
 	@Override
+	public List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage) {
+		return null;
+	}
+
+	@Override
 	public void create(Party party) {
 
 	}
