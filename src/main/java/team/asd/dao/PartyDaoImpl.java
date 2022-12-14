@@ -43,6 +43,11 @@ public class PartyDaoImpl implements PartyDao {
     }
 
     @Override
+    public List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage) {
+        return partyMapper.readReportByPageItems(page, itemsPerPage);
+    }
+
+    @Override
     public void create(Party party) {
         partyMapper.create(party);
     }

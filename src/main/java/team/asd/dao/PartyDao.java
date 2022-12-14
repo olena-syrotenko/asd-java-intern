@@ -16,6 +16,8 @@ public interface PartyDao {
 
 	PartyReportDto readReportById(Integer id);
 
+	List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage);
+
 	void create(Party party);
 
 	void update(Party party);
