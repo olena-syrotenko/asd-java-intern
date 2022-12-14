@@ -1,5 +1,6 @@
 package team.asd.dao;
 
+import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
 
 import java.util.List;
@@ -22,6 +23,11 @@ public class TestPartyDao implements PartyDao {
 
 	@Override
 	public List<Party> readByChannelMaskUserType(String mask, String userType) {
+		return null;
+	}
+
+	@Override
+	public PartyReportDto readReportById(Integer id) {
 		return null;
 	}
 

@@ -1,6 +1,7 @@
 package team.asd.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface PartyMapper {
 	List<Party> readByEmailUserTypeNameState(String emailAddress, String userType, String name, String state);
 
 	List<Party> readByChannelMaskUserType(String mask, String userType);
+
+	PartyReportDto readReportById(Integer id);
 
 	void create(Party party);
 

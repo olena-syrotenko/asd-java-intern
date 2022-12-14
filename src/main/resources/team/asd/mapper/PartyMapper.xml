@@ -15,12 +15,53 @@
 		<result property='version' column='version'/>
 	</resultMap>
 
+	<resultMap id="PartyReportResultMap" type="team.asd.dto.PartyReportDto">
+			<id property='id' column='p_id'/>
+			<result property='name' column='p_name'/>
+			<result property='state' column='p_state'/>
+			<result property='postalAddress' column='p_postal_address'/>
+			<result property='emailAddress' column='p_email_address'/>
+			<result property='mobilePhone' column='p_mobile_phone'/>
+			<result property='password' column='p_password'/>
+			<result property='currency' column='p_currency'/>
+			<result property='userType' column='p_user_type'/>
+		<association property="channelPartner" javaType="team.asd.dto.PartyChannelDto">
+			<result property='abbreviation' column='cp_abbreviation'/>
+			<result property='channelName' column='cp_channel_name'/>
+			<result property='commission' column='cp_commission'/>
+			<result property='isFundsHolder' column='cp_funds_holder'/>
+		</association>
+		<association property="propertyManager" javaType="team.asd.dto.PartyManagerDto">
+			<result property="isFundsHolder" column="pm_funds_holder"/>
+			<result property="paymentAmount" column="pm_payment_amount"/>
+			<result property="paymentType" column="pm_payment_type"/>
+			<result property="commission" column="pm_commission"/>
+		</association>
+		<collection property="managerToChannel" ofType="team.asd.dto.ManagerToChannelDto">
+			<id property="id" column="mtc_id"/>
+			<result property="propertyManagerId" column="mtc_property_manager_id"/>
+			<result property="channelPartnerId" column="mtc_channel_partner_id"/>
+			<result property="channelPartnerCommission" column="mtc_channel_partner_commission"/>
+			<result property="isFundsHolder" column="mtc_funds_holder"/>
+			<result property="isNetRate" column="mtc_net_rate"/>
+		</collection>
+	</resultMap>
+
 	<sql id="partyColumnList">
 		id, name, state, postal_address, email_address, mobile_phone, password, currency, user_type, version
 	</sql>
 
 	<sql id="partyColumnListForJoin">
 		p.id, p.name, p.state, p.postal_address, p.email_address, p.mobile_phone, p.password, p.currency, p.user_type, p.version
+	</sql>
+
+	<sql id="partyReportColumnList">
+		p.id AS p_id, p.name AS p_name, p.state AS p_state, p.postal_address AS p_postal_address, p.email_address AS p_email_address,
+		p.mobile_phone AS p_mobile_phone, p.password AS p_password, p.currency AS p_currency, p.user_type AS p_user_type, cp.abbreviation AS cp_abbreviation,
+		cp.channel_name AS cp_channel_name, cp.commission AS cp_commission, cp.funds_holder AS cp_funds_holder,	pm.funds_holder AS pm_funds_holder,
+		pm.payment_amount AS pm_payment_amount, pm.payment_type AS pm_payment_type, pm.commission AS pm_commission, mtc.id AS mtc_id,
+		mtc.property_manager_id AS mtc_property_manager_id, mtc.channel_partner_id AS mtc_channel_partner_id,
+		mtc.channel_partner_commission AS mtc_channel_partner_commission, mtc.funds_holder AS mtc_funds_holder, mtc.net_rate AS mtc_net_rate
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="PartyResultMap">
@@ -67,6 +108,14 @@
 		WHERE cp.channel_name LIKE #{channelNameStartsWith}
 		AND p.user_type = #{userType}
 		AND p.state IN ('Created', 'Suspended')
+	</select>
+
+	<select id="readReportById" parameterType="int" resultMap="PartyReportResultMap">
+		SELECT
+		<include refid="partyReportColumnList"/>
+		FROM party p LEFT JOIN channel_partner cp on p.id = cp.party_id LEFT JOIN property_manager_info pm on p.id = pm.pm_id
+		LEFT JOIN manager_to_channel mtc ON mtc.channel_partner_id = cp.id OR mtc.property_manager_id = pm.id
+		WHERE p.id = #{id} AND (cp.state IS NULL OR cp.state = 'Created') AND (pm.state IS NULL OR pm.state = 'Created')
 	</select>
 
 	<insert id="create" parameterType="team.asd.entity.Party">

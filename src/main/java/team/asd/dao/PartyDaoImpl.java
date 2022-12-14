@@ -2,6 +2,7 @@ package team.asd.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
 import team.asd.mapper.PartyMapper;
 
@@ -34,6 +35,11 @@ public class PartyDaoImpl implements PartyDao {
     @Override
     public List<Party> readByChannelMaskUserType(String mask, String userType) {
         return partyMapper.readByChannelMaskUserType(mask, userType);
+    }
+
+    @Override
+    public PartyReportDto readReportById(Integer id) {
+        return partyMapper.readReportById(id);
     }
 
     @Override
