@@ -15,7 +15,7 @@
 		<result property='version' column='version'/>
 	</resultMap>
 
-	<resultMap id="PartyReportResultMap" type="team.asd.dto.PartyReportDto">
+	<resultMap id="PartyReportResultMap" type="team.asd.entity.PartyReport">
 			<id property='id' column='p_id'/>
 			<result property='name' column='p_name'/>
 			<result property='state' column='p_state'/>
@@ -25,19 +25,19 @@
 			<result property='password' column='p_password'/>
 			<result property='currency' column='p_currency'/>
 			<result property='userType' column='p_user_type'/>
-		<association property="channelPartner" javaType="team.asd.dto.PartyChannelDto">
+		<association property="channelPartner" javaType="team.asd.entity.PartyChannel">
 			<result property='abbreviation' column='cp_abbreviation'/>
 			<result property='channelName' column='cp_channel_name'/>
 			<result property='commission' column='cp_commission'/>
 			<result property='isFundsHolder' column='cp_funds_holder'/>
 		</association>
-		<association property="propertyManager" javaType="team.asd.dto.PartyManagerDto">
+		<association property="propertyManager" javaType="team.asd.entity.PartyManager">
 			<result property="isFundsHolder" column="pm_funds_holder"/>
 			<result property="paymentAmount" column="pm_payment_amount"/>
 			<result property="paymentType" column="pm_payment_type"/>
 			<result property="commission" column="pm_commission"/>
 		</association>
-		<collection property="managerToChannel" ofType="team.asd.dto.ManagerToChannelDto">
+		<collection property="managerToChannel" ofType="team.asd.entity.ManagerToChannel">
 			<id property="id" column="mtc_id"/>
 			<result property="propertyManagerId" column="mtc_property_manager_id"/>
 			<result property="channelPartnerId" column="mtc_channel_partner_id"/>

@@ -1,13 +1,13 @@
 package team.asd.service;
 
-import org.apache.commons.lang3.ObjectUtils;
 import com.antkorwin.xsync.XSync;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.dao.PartyDao;
-import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
+import team.asd.entity.PartyReport;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
 
@@ -54,14 +54,14 @@ public class PartyService {
 		return partyDao.readByChannelMaskUserType(mask, userType);
 	}
 
-	public PartyReportDto readReportById(Integer id) {
+	public PartyReport readReportById(Integer id) {
 		if (ValidationUtil.isWrongId(id)) {
 			throw new ValidationException("Wrong id was provided");
 		}
 		return partyDao.readReportById(id);
 	}
 
-	public List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage) {
+	public List<PartyReport> readReportByPageItems(Integer page, Integer itemsPerPage) {
 		if (ObjectUtils.anyNull(page, itemsPerPage) || page < 1 || itemsPerPage < 1) {
 			throw new ValidationException("Wrong parameters were provided");
 		}

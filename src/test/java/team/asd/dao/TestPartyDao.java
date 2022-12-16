@@ -1,7 +1,7 @@
 package team.asd.dao;
 
-import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
+import team.asd.entity.PartyReport;
 
 import java.util.List;
 
@@ -27,12 +27,12 @@ public class TestPartyDao implements PartyDao {
 	}
 
 	@Override
-	public PartyReportDto readReportById(Integer id) {
+	public PartyReport readReportById(Integer id) {
 		return null;
 	}
 
 	@Override
-	public List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage) {
+	public List<PartyReport> readReportByPageItems(Integer page, Integer itemsPerPage) {
 		return null;
 	}
 

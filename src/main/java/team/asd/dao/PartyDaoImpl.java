@@ -2,8 +2,8 @@ package team.asd.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import team.asd.dto.PartyReportDto;
 import team.asd.entity.Party;
+import team.asd.entity.PartyReport;
 import team.asd.mapper.PartyMapper;
 
 import java.util.List;
@@ -39,12 +39,12 @@ public class PartyDaoImpl implements PartyDao {
     }
 
     @Override
-    public PartyReportDto readReportById(Integer id) {
+    public PartyReport readReportById(Integer id) {
         return partyMapper.readReportById(id);
     }
 
     @Override
-    public List<PartyReportDto> readReportByPageItems(Integer page, Integer itemsPerPage) {
+    public List<PartyReport> readReportByPageItems(Integer page, Integer itemsPerPage) {
         return partyMapper.readReportByPageItems(page, itemsPerPage);
     }
 
