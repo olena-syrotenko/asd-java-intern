@@ -49,4 +49,26 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+	<profiles>
+		<profile>
+			<id>demo</id>
+			<properties>
+				<app.profiles>demo</app.profiles>
+				<spring.application.name>demo</spring.application.name>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<app.profiles>prod</app.profiles>
+				<spring.application.name>prod</spring.application.name>
+			</properties>
+		</profile>
+	</profiles>
 </project>
