@@ -32,6 +32,11 @@
 			<version>8.0.30</version>
 		</dependency>
 		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.25.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.24</version>
@@ -49,4 +54,26 @@
 			</plugin>
 		</plugins>
 	</build>
+
+
+	<profiles>
+		<profile>
+			<id>demo</id>
+			<properties>
+				<app.profiles>demo</app.profiles>
+				<spring.application.name>demo</spring.application.name>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<app.profiles>prod</app.profiles>
+				<spring.application.name>prod</spring.application.name>
+			</properties>
+		</profile>
+	</profiles>
 </project>
