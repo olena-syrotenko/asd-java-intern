@@ -1,6 +1,5 @@
 package team.asd.controller;
 
-import team.asd.service.PartyService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -15,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.asd.dto.PartyDto;
+import team.asd.dto.PartyProductTransactionDto;
 import team.asd.entity.Party;
+import team.asd.service.PartyService;
 import team.asd.util.PartyUtil;
 
 import javax.validation.Valid;
@@ -79,6 +80,13 @@ public class PartyController {
 				.stream()
 				.map(PartyUtil::convertToDto)
 				.collect(Collectors.toList());
+	}
+
+	@ApiOperation(value = "Get information about party, its products and payment transactions by party id", notes = "For valid response provide id >= 1. Returns party information with the number of its products and transactions as per the party id")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"), @ApiResponse(code = 400, message = "Wrong id was provided") })
+	@GetMapping("/party-product-transaction/{id}")
+	public PartyProductTransactionDto getPartyProductTransactionInfoById(@PathVariable @ApiParam(name = "id", value = "Party id", example = "1") Integer id) {
+		return partyService.readPartyProductTransactionInfoById(id);
 	}
 
 	@ApiOperation(value = "Create a new party", notes = "For valid response provide a non-empty party name. Returns a party with create options")
