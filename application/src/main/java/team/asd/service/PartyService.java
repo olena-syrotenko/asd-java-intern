@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.constants.PaymentNumber;
 import team.asd.dao.PartyDao;
+import team.asd.dao.PaymentTransactionDao;
 import team.asd.dao.ProductDao;
 import team.asd.dao.PropertyManagerInfoDao;
 import team.asd.dto.PartyProductTransactionDto;
@@ -28,12 +29,14 @@ public class PartyService {
 	private final PartyDao partyDao;
 	private final PropertyManagerInfoDao propertyManagerInfoDao;
 	private final ProductDao productDao;
+	private final PaymentTransactionDao paymentTransactionDao;
 
 	@Autowired
-	public PartyService(PartyDao partyDao, PropertyManagerInfoDao propertyManagerInfoDao, ProductDao productDao) {
+	public PartyService(PartyDao partyDao, PropertyManagerInfoDao propertyManagerInfoDao, ProductDao productDao, PaymentTransactionDao paymentTransactionDao) {
 		this.partyDao = partyDao;
 		this.propertyManagerInfoDao = propertyManagerInfoDao;
 		this.productDao = productDao;
+		this.paymentTransactionDao = paymentTransactionDao;
 	}
 
 	public Party readById(Integer id) {
@@ -96,6 +99,8 @@ public class PartyService {
 				.commissionAmount(propertyManagerInfo.map(PropertyManagerInfo::getCommission)
 						.orElse(null))
 				.productsCountBySupplier(productDao.readProductsByParams(id, null, null)
+						.size())
+				.paymentTransactionCountByPartner(paymentTransactionDao.readByChargeTypePartnerIdFundsHolderStatus(null, id, null, null)
 						.size())
 				.build();
 	}
