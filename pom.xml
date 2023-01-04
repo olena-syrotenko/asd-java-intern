@@ -8,6 +8,7 @@
 	<modules>
 		<module>party-layer</module>
 		<module>application</module>
+		<module>redis-module</module>
 	</modules>
 
 	<parent>
