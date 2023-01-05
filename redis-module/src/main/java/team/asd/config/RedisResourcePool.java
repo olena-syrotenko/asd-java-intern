@@ -1,17 +1,21 @@
-package config;
+package team.asd.config;
 
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import redis.clients.jedis.JedisPooled;
 
 @Configuration
-public class RedisSourceConfig {
+@ConfigurationProperties(prefix = "spring.redis")
+@Setter
+public class RedisResourcePool {
+	private String host;
+	private Integer port;
+	private String password;
+
 	@Bean
-	@Primary
-	@ConfigurationProperties(prefix = "spring.redis")
 	public JedisPooled resourcePool() {
-		return new JedisPooled();
+		return new JedisPooled(host, port, null, password);
 	}
 }
