@@ -95,7 +95,7 @@ public class RedisController {
 		return value;
 	}
 
-	@ApiOperation(value = "Save expiring cache with its key", notes = "For valid response provide non-empty parameters. Returns saved value")
+	@ApiOperation(value = "Save expiring cache with its key", notes = "For valid response provide non-empty parameters and positive expire date. Returns saved value")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully retrieved"),
 			@ApiResponse(code = 400, message = "Wrong parameters were provided") })
 	@PostMapping("/expire-cache")

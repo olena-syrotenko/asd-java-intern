@@ -21,6 +21,13 @@ public class ExceptionHandler {
         return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(RedisValidationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage catchRedisValidationException(RedisValidationException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), exception.getMessage());
+    }
+
     @org.springframework.web.bind.annotation.ExceptionHandler(InvokeMethodException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage catchValidationException(InvokeMethodException exception) {
