@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import team.asd.service.RedisClient;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +72,7 @@ public class RedisController {
 			@ApiResponse(code = 400, message = "Wrong parameters were provided") })
 	@PostMapping("/caches")
 	public List<String> saveValueListByKey(@RequestParam(name = "key") @ApiParam(name = "key", value = "Key", example = "testKey") String key,
-			@RequestParam(name = "values") @ApiParam(name = "values", value = "Value list", example = "testValue") List<String> values) {
+			@RequestBody @ApiParam(name = "values", value = "Value list", example = "testValue") List<String> values) {
 		redisClient.saveList(key, values);
 		return values;
 	}
