@@ -17,9 +17,6 @@ jobs:
       contents: read
       packages: write
 
-    strategy:
-      matrix:
-        maven: [ '3.5.4', '3.6.3', '3.8.6' ]
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -27,6 +24,5 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn package --s data/nexus-settings.xml
