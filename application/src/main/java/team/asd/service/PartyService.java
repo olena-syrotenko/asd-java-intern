@@ -5,13 +5,20 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import team.asd.constants.PaymentNumber;
 import team.asd.dao.PartyDao;
+import team.asd.dao.PaymentTransactionDao;
+import team.asd.dao.ProductDao;
+import team.asd.dao.PropertyManagerInfoDao;
+import team.asd.dto.PartyProductTransactionDto;
 import team.asd.entity.Party;
 import team.asd.entity.PartyReport;
+import team.asd.entity.PropertyManagerInfo;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,10 +27,16 @@ public class PartyService {
 	@Autowired
 	private XSync<Integer> intXSync;
 	private final PartyDao partyDao;
+	private final PropertyManagerInfoDao propertyManagerInfoDao;
+	private final ProductDao productDao;
+	private final PaymentTransactionDao paymentTransactionDao;
 
 	@Autowired
-	public PartyService(PartyDao partyDao) {
+	public PartyService(PartyDao partyDao, PropertyManagerInfoDao propertyManagerInfoDao, ProductDao productDao, PaymentTransactionDao paymentTransactionDao) {
 		this.partyDao = partyDao;
+		this.propertyManagerInfoDao = propertyManagerInfoDao;
+		this.productDao = productDao;
+		this.paymentTransactionDao = paymentTransactionDao;
 	}
 
 	public Party readById(Integer id) {
@@ -66,6 +79,30 @@ public class PartyService {
 			throw new ValidationException("Wrong parameters were provided");
 		}
 		return partyDao.readReportByPageItems(page, itemsPerPage);
+	}
+
+	public PartyProductTransactionDto readPartyProductTransactionInfoById(Integer id) {
+		if (ValidationUtil.isWrongId(id)) {
+			throw new ValidationException("Wrong id was provided");
+		}
+		Party party = partyDao.readById(id);
+		if (party == null) {
+			return null;
+		}
+		Optional<PropertyManagerInfo> propertyManagerInfo = Optional.ofNullable(propertyManagerInfoDao.readByPmIdState(id, null));
+		return PartyProductTransactionDto.builder()
+				.partyId(party.getId())
+				.partyName(party.getName())
+				.numberOfPayment(propertyManagerInfo.map(PropertyManagerInfo::getNumberOfPayments)
+						.map(PaymentNumber::getIntegerValue)
+						.orElse(null))
+				.commissionAmount(propertyManagerInfo.map(PropertyManagerInfo::getCommission)
+						.orElse(null))
+				.productsCountBySupplier(productDao.readProductsByParams(id, null, null)
+						.size())
+				.paymentTransactionCountByPartner(paymentTransactionDao.readByChargeTypePartnerIdFundsHolderStatus(null, id, null, null)
+						.size())
+				.build();
 	}
 
 	public void create(Party party) {

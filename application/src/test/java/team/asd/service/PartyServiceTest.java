@@ -1,6 +1,5 @@
 package team.asd.service;
 
-import team.asd.data.PartyData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +8,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import team.asd.constants.PartyState;
 import team.asd.dao.PartyDao;
+import team.asd.dao.PaymentTransactionDao;
+import team.asd.dao.ProductDao;
+import team.asd.dao.PropertyManagerInfoDao;
+import team.asd.data.PartyData;
 import team.asd.entity.Party;
 import team.asd.exceptions.ValidationException;
 
@@ -27,6 +30,12 @@ import static org.mockito.Mockito.when;
 class PartyServiceTest {
 	@Mock
 	private PartyDao partyDao;
+	@Mock
+	private PropertyManagerInfoDao propertyManagerInfoDao;
+	@Mock
+	private ProductDao productDao;
+	@Mock
+	private PaymentTransactionDao paymentTransactionDao;
 	private PartyService partyService;
 	private Party party;
 	private static Party mockParty;
@@ -34,7 +43,7 @@ class PartyServiceTest {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		partyService = new PartyService(partyDao);
+		partyService = new PartyService(partyDao, propertyManagerInfoDao, productDao, paymentTransactionDao);
 		party = new Party();
 		mockParty = null;
 	}
