@@ -17,6 +17,7 @@ import team.asd.entity.PropertyManagerInfo;
 import team.asd.exceptions.ValidationException;
 import team.asd.util.ValidationUtil;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -109,6 +110,7 @@ public class PartyService {
 		if (ValidationUtil.isWrongRequiredFields(party)) {
 			throw new ValidationException("Wrong Party object was provided");
 		}
+		party.setPassword(encodePassword(party.getPassword()));
 		partyDao.create(party);
 	}
 
@@ -116,6 +118,7 @@ public class PartyService {
 		if (ValidationUtil.isWrongUpdateObject(party)) {
 			throw new ValidationException("Wrong Party object was provided");
 		}
+		party.setPassword(encodePassword(party.getPassword()));
 		partyDao.update(party);
 	}
 
@@ -134,5 +137,13 @@ public class PartyService {
 			throw new ValidationException("Wrong id was provided");
 		}
 		partyDao.deleteById(id);
+	}
+
+	private String encodePassword(String password) {
+		if (StringUtils.isBlank(password)) {
+			return null;
+		}
+		return Base64.getEncoder()
+				.encodeToString(password.getBytes());
 	}
 }
