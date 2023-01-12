@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import redis.clients.jedis.JedisPooled;
 
 @Configuration
-@PropertySource("redis.properties")
+@PropertySource("classpath:redis.properties")
 @ConfigurationProperties(prefix = "spring.redis")
 @Setter
 public class RedisResourcePool {
