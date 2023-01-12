@@ -92,7 +92,7 @@ public class RedisController {
 	public String saveMapValueByKey(@RequestParam(name = "mapKey") @ApiParam(name = "mapKey", value = "Key of map", example = "testMapKey") String mapKey,
 			@RequestParam(name = "valueKey") @ApiParam(name = "valueKey", value = "Key of value", example = "testKey") String valueKey,
 			@RequestParam(name = "value") @ApiParam(name = "value", value = "Value", example = "testValue") String value) {
-		redisClient.saveValueInHashMap(mapKey, valueKey, value);
+		redisClient.saveValueInHashMap(mapKey, valueKey, value, null);
 		return value;
 	}
 

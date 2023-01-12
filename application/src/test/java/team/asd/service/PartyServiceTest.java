@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import team.asd.constants.PartyState;
+import team.asd.dao.ManagerToChannelDao;
 import team.asd.dao.PartyDao;
 import team.asd.dao.PaymentTransactionDao;
 import team.asd.dao.ProductDao;
@@ -36,6 +37,10 @@ class PartyServiceTest {
 	private ProductDao productDao;
 	@Mock
 	private PaymentTransactionDao paymentTransactionDao;
+	@Mock
+	private ManagerToChannelDao managerToChannelDao;
+	@Mock
+	private RedisClient redisClient;
 	private PartyService partyService;
 	private Party party;
 	private static Party mockParty;
@@ -43,7 +48,7 @@ class PartyServiceTest {
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
-		partyService = new PartyService(partyDao, propertyManagerInfoDao, productDao, paymentTransactionDao);
+		partyService = new PartyService(partyDao, propertyManagerInfoDao, productDao, paymentTransactionDao, managerToChannelDao, redisClient);
 		party = new Party();
 		mockParty = null;
 	}

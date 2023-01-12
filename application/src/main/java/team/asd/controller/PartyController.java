@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import team.asd.dto.AuthDto;
 import team.asd.dto.PartyDto;
 import team.asd.dto.PartyProductTransactionDto;
 import team.asd.entity.Party;
@@ -129,5 +130,13 @@ public class PartyController {
 	public Integer deleteParty(@PathVariable @ApiParam(name = "id", value = "Party id", example = "1") Integer id) {
 		partyService.delete(id);
 		return id;
+	}
+
+	@ApiOperation(value = "Create authorization token by provided credentials", notes = "For valid response provide non-empty credentials. Returns an authorization token")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully authorized"),
+			@ApiResponse(code = 400, message = "Wrong auth parameters were provided") })
+	@PostMapping("/party/auth")
+	public String auth(@RequestBody @Valid @ApiParam(name = "authDto", value = "Credentials for authorization") AuthDto authDto) {
+		return partyService.auth(authDto.getEmail(), authDto.getPassword(), authDto.getChannelPartnerId());
 	}
 }

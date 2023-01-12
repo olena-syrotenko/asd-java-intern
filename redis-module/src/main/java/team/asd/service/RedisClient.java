@@ -54,11 +54,14 @@ public class RedisClient {
 		return jedis.lrange(keyList, 0, -1);
 	}
 
-	public void saveValueInHashMap(String primaryKey, String secondaryKey, String value) {
+	public void saveValueInHashMap(String primaryKey, String secondaryKey, String value, Long expireDate) {
 		if (StringUtils.isAnyBlank(primaryKey, secondaryKey, value)) {
 			throw new RedisValidationException("Wrong parameters were provided");
 		}
 		jedis.hset(primaryKey, secondaryKey, value);
+		if (expireDate != null) {
+			jedis.expire(primaryKey, expireDate);
+		}
 	}
 
 	public String retrieveValueFromHashMap(String primaryKey, String secondaryKey) {
