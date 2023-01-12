@@ -6,11 +6,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.constants.PaymentNumber;
+import team.asd.dao.ManagerToChannelDao;
 import team.asd.dao.PartyDao;
 import team.asd.dao.PaymentTransactionDao;
 import team.asd.dao.ProductDao;
 import team.asd.dao.PropertyManagerInfoDao;
 import team.asd.dto.PartyProductTransactionDto;
+import team.asd.entity.ManagerToChannel;
 import team.asd.entity.Party;
 import team.asd.entity.PartyReport;
 import team.asd.entity.PropertyManagerInfo;
@@ -20,24 +22,33 @@ import team.asd.util.ValidationUtil;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
 public class PartyService {
+	private static final Long AUTH_EXPIRE = 3600L;
+	private static final String AUTH_USER_TYPE = "PropertyManager";
+
 	@Autowired
 	private XSync<Integer> intXSync;
 	private final PartyDao partyDao;
 	private final PropertyManagerInfoDao propertyManagerInfoDao;
 	private final ProductDao productDao;
 	private final PaymentTransactionDao paymentTransactionDao;
+	private final ManagerToChannelDao managerToChannelDao;
+	private final RedisClient redisClient;
 
 	@Autowired
-	public PartyService(PartyDao partyDao, PropertyManagerInfoDao propertyManagerInfoDao, ProductDao productDao, PaymentTransactionDao paymentTransactionDao) {
+	public PartyService(PartyDao partyDao, PropertyManagerInfoDao propertyManagerInfoDao, ProductDao productDao, PaymentTransactionDao paymentTransactionDao,
+			ManagerToChannelDao managerToChannelDao, RedisClient redisClient) {
 		this.partyDao = partyDao;
 		this.propertyManagerInfoDao = propertyManagerInfoDao;
 		this.productDao = productDao;
 		this.paymentTransactionDao = paymentTransactionDao;
+		this.managerToChannelDao = managerToChannelDao;
+		this.redisClient = redisClient;
 	}
 
 	public Party readById(Integer id) {
@@ -137,6 +148,36 @@ public class PartyService {
 			throw new ValidationException("Wrong id was provided");
 		}
 		partyDao.deleteById(id);
+	}
+
+	public String auth(String email, String password, Integer channelPartnerId) {
+		if (ObjectUtils.anyNull(email, password, channelPartnerId)) {
+			throw new ValidationException("Wrong auth parameters were provided");
+		}
+
+		Party party = partyDao.readByEmailUserTypeNameState(email, AUTH_USER_TYPE, null, null)
+				.stream()
+				.findFirst()
+				.orElse(null);
+
+		if (party == null || !StringUtils.equals(encodePassword(password), party.getPassword())) {
+			return null;
+		}
+
+		String token = redisClient.retrieveValueFromHashMap("auth_token:" + party.getId(), channelPartnerId.toString());
+		if (token == null) {
+			Integer propertyManagerInfoId = Optional.ofNullable(propertyManagerInfoDao.readByPmIdState(party.getId(), null))
+					.map(PropertyManagerInfo::getId)
+					.orElse(null);
+			ManagerToChannel managerToChannel = managerToChannelDao.readByPropManagerIdChanPartnerId(propertyManagerInfoId, channelPartnerId);
+			if (managerToChannel != null) {
+				token = UUID.randomUUID()
+						.toString();
+				redisClient.saveValueInHashMap("auth_token:" + party.getId(), channelPartnerId.toString(), token, AUTH_EXPIRE);
+			}
+		}
+		return token;
+
 	}
 
 	private String encodePassword(String password) {
