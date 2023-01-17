@@ -10,4 +10,9 @@ public class XSyncConfig {
 	public XSync<Integer> intXSync(){
 		return new XSync<>();
 	}
+
+	@Bean
+	public XSync<String> stringXSync(){
+		return new XSync<>();
+	}
 }
