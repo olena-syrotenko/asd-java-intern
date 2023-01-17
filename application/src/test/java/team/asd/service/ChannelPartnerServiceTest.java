@@ -1,6 +1,5 @@
 package team.asd.service;
 
-import team.asd.data.ChannelPartnerData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import team.asd.constants.ChannelPartnerState;
 import team.asd.dao.ChannelPartnerDao;
 import team.asd.dao.ManagerToChannelDao;
+import team.asd.data.ChannelPartnerData;
 import team.asd.entity.ChannelPartner;
 import team.asd.exceptions.ValidationException;
 

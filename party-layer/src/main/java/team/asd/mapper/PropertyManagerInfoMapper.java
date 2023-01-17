@@ -1,8 +1,8 @@
 package team.asd.mapper;
 
-import team.asd.entity.PropertyManagerInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import team.asd.entity.PropertyManagerInfo;
 
 @Mapper
 public interface PropertyManagerInfoMapper {

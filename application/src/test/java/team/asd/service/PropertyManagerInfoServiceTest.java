@@ -1,6 +1,5 @@
 package team.asd.service;
 
-import team.asd.data.PropertyManagerInfoData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import team.asd.constants.PropertyManagerState;
 import team.asd.dao.PropertyManagerInfoDao;
+import team.asd.data.PropertyManagerInfoData;
 import team.asd.entity.PropertyManagerInfo;
 import team.asd.exceptions.ValidationException;
 

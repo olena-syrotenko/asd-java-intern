@@ -1,11 +1,11 @@
 package team.asd.entity;
 
-import team.asd.constants.PaymentNumber;
-import team.asd.constants.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import team.asd.constants.PaymentNumber;
+import team.asd.constants.PaymentType;
 import team.asd.constants.PropertyManagerState;
 
 import java.util.Date;

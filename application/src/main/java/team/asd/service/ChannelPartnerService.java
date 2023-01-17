@@ -1,7 +1,5 @@
 package team.asd.service;
 
-import team.asd.exceptions.ValidationException;
-import team.asd.util.ValidationUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +9,8 @@ import team.asd.dao.ChannelPartnerDao;
 import team.asd.dao.ManagerToChannelDao;
 import team.asd.entity.ChannelPartner;
 import team.asd.entity.ManagerToChannel;
+import team.asd.exceptions.ValidationException;
+import team.asd.util.ValidationUtil;
 
 import java.util.List;
 

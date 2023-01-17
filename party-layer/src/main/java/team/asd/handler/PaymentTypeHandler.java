@@ -1,9 +1,9 @@
 package team.asd.handler;
 
-import team.asd.constants.PaymentType;
 import org.apache.ibatis.type.EnumTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
+import team.asd.constants.PaymentType;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

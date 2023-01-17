@@ -1,9 +1,5 @@
 package team.asd.controller;
 
-import team.asd.dto.ChannelPartnerDto;
-import team.asd.dto.ManagerToChannelDto;
-import team.asd.util.ChannelPartnerUtil;
-import team.asd.util.ManagerToChannelUtil;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -17,9 +13,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import team.asd.dto.ChannelPartnerDto;
+import team.asd.dto.ManagerToChannelDto;
 import team.asd.entity.ChannelPartner;
 import team.asd.entity.ManagerToChannel;
 import team.asd.service.ChannelPartnerService;
+import team.asd.util.ChannelPartnerUtil;
+import team.asd.util.ManagerToChannelUtil;
 
 import javax.validation.Valid;
 import java.util.List;
