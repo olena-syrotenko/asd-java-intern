@@ -21,15 +21,13 @@
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="ManagerToChannelResultMap">
-		SELECT
-		<include refid="ManagerToChannelColumnList"/>
+		SELECT <include refid="ManagerToChannelColumnList"/>
 		FROM manager_to_channel
 		WHERE id = #{id}
 	</select>
 
 	<select id="readByPropManagerIdChanPartnerId" parameterType="int" resultMap="ManagerToChannelResultMap">
-		SELECT
-		<include refid="ManagerToChannelColumnList"/>
+		SELECT <include refid="ManagerToChannelColumnList"/>
 		FROM manager_to_channel
 		<where>
 			<if test="propertyManagerId != null">
@@ -43,8 +41,7 @@
 	</select>
 
 	<select id="readByChannelPartnerIdNetRate" parameterType="int" resultMap="ManagerToChannelResultMap">
-		SELECT
-		<include refid="ManagerToChannelColumnList"/>
+		SELECT <include refid="ManagerToChannelColumnList"/>
 		FROM manager_to_channel
 		WHERE channel_partner_id = #{channelPartnerId}
 		<if test="propertyManagerId != null">
@@ -53,12 +50,14 @@
 	</select>
 
 	<select id="readByFundsHolder" parameterType="int" resultMap="ManagerToChannelResultMap">
-		SELECT
-		<include refid="ManagerToChannelColumnListForJoin"/>
-		FROM manager_to_channel mtc JOIN channel_partner cp ON mtc.channel_partner_id = cp.id
-		JOIN property_manager_info pmi ON mtc.property_manager_id = pmi.id
-		WHERE cp.state IN ('Suspended', 'Initial') AND pmi.state IN ('Suspended', 'Initial')
-		AND cp.funds_holder = #{fundsHolder} AND pmi.funds_holder = #{fundsHolder}
+		SELECT <include refid="ManagerToChannelColumnListForJoin"/>
+		FROM manager_to_channel mtc
+			JOIN channel_partner cp ON mtc.channel_partner_id = cp.id
+			JOIN property_manager_info pmi ON mtc.property_manager_id = pmi.id
+		WHERE cp.state IN ('Suspended', 'Initial')
+		  AND pmi.state IN ('Suspended', 'Initial')
+		  AND cp.funds_holder = #{fundsHolder}
+		  AND pmi.funds_holder = #{fundsHolder}
 	</select>
 
 	<insert id="create" parameterType="team.asd.entity.ManagerToChannel">

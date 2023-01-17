@@ -20,15 +20,13 @@
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="PropertyManagerInfoResultMap">
-		SELECT
-		<include refid="PropertyManagerInfoColumnList"/>
+		SELECT <include refid="PropertyManagerInfoColumnList"/>
 		FROM property_manager_info
 		WHERE id = #{id}
 	</select>
 
 	<select id="readByPmIdState" parameterType="map" resultMap="PropertyManagerInfoResultMap">
-		SELECT
-		<include refid="PropertyManagerInfoColumnList"/>
+		SELECT <include refid="PropertyManagerInfoColumnList"/>
 		FROM property_manager_info
 		WHERE pm_id = #{pmId}
 		<if test="state != null">
