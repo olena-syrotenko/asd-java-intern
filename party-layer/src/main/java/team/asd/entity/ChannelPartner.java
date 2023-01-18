@@ -1,10 +1,10 @@
 package team.asd.entity;
 
-import team.asd.constants.ChannelPartnerState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import team.asd.constants.ChannelPartnerState;
 
 import java.util.Date;
 

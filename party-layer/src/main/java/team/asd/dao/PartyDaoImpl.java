@@ -1,9 +1,9 @@
 package team.asd.dao;
 
-import team.asd.entity.Party;
-import team.asd.entity.PartyReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import team.asd.entity.Party;
+import team.asd.entity.PartyReport;
 import team.asd.mapper.PartyMapper;
 
 import java.util.List;

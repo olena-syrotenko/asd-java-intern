@@ -25,6 +25,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class PartyService {
@@ -33,6 +35,8 @@ public class PartyService {
 
 	@Autowired
 	private XSync<Integer> intXSync;
+	@Autowired
+	private XSync<String> stringXSync;
 	private final PartyDao partyDao;
 	private final PropertyManagerInfoDao propertyManagerInfoDao;
 	private final ProductDao productDao;
@@ -161,23 +165,46 @@ public class PartyService {
 				.orElse(null);
 
 		if (party == null || !StringUtils.equals(encodePassword(password), party.getPassword())) {
-			return null;
+			throw new ValidationException("Incorrect email or password");
 		}
 
-		String token = redisClient.retrieveValueFromHashMap("auth_token:" + party.getId(), channelPartnerId.toString());
-		if (token == null) {
-			Integer propertyManagerInfoId = Optional.ofNullable(propertyManagerInfoDao.readByPmIdState(party.getId(), null))
-					.map(PropertyManagerInfo::getId)
-					.orElse(null);
-			ManagerToChannel managerToChannel = managerToChannelDao.readByPropManagerIdChanPartnerId(propertyManagerInfoId, channelPartnerId);
-			if (managerToChannel != null) {
-				token = UUID.randomUUID()
-						.toString();
-				redisClient.saveValueInHashMap("auth_token:" + party.getId(), channelPartnerId.toString(), token, AUTH_EXPIRE);
+		return getOrGenerateToken(party.getId(), channelPartnerId);
+	}
+
+	private String getOrGenerateToken(Integer partyId, Integer channelPartnerId) {
+		AtomicReference<String> token = new AtomicReference<>();
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+		executorService.submit(() -> stringXSync.execute(partyId + " " + channelPartnerId, () -> {
+			token.getAndSet(redisClient.retrieveValueFromHashMap("auth_token:" + partyId, channelPartnerId.toString()));
+			if (token.get() == null && isRelation(partyId, channelPartnerId)) {
+				token.getAndSet(UUID.randomUUID()
+						.toString());
+				redisClient.saveValueInHashMap("auth_token:" + partyId, channelPartnerId.toString(), token.get(), AUTH_EXPIRE);
 			}
-		}
-		return token;
+		}));
+		awaitExecutorService(executorService);
+		return token.get();
+	}
 
+	private void awaitExecutorService(ExecutorService executorService) {
+		executorService.shutdown();
+		try {
+			if (!executorService.awaitTermination(20, TimeUnit.SECONDS)) {
+				executorService.shutdownNow();
+			}
+		} catch (InterruptedException e) {
+			executorService.shutdownNow();
+			Thread.currentThread()
+					.interrupt();
+		}
+	}
+
+	private boolean isRelation(Integer partyId, Integer channelPartnerId) {
+		Integer propertyManagerInfoId = Optional.ofNullable(propertyManagerInfoDao.readByPmIdState(partyId, null))
+				.map(PropertyManagerInfo::getId)
+				.orElse(null);
+		ManagerToChannel managerToChannel = managerToChannelDao.readByPropManagerIdChanPartnerId(propertyManagerInfoId, channelPartnerId);
+		return managerToChannel != null;
 	}
 
 	private String encodePassword(String password) {

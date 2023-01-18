@@ -1,8 +1,8 @@
 package team.asd.dao;
 
-import team.asd.entity.ManagerToChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import team.asd.entity.ManagerToChannel;
 import team.asd.mapper.ManagerToChannelMapper;
 
 import java.util.List;

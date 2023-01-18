@@ -19,23 +19,20 @@
 	</sql>
 
 	<select id="readById" parameterType="int" resultMap="ChannelPartnerResultMap">
-		SELECT
-		<include refid="ChannelPartnerColumnList"/>
+		SELECT <include refid="ChannelPartnerColumnList"/>
 		FROM channel_partner
 		WHERE id = #{id}
 	</select>
 
 	<select id="readByAbbreviationMask" parameterType="java.lang.String" resultMap="ChannelPartnerResultMap">
 		<bind name="abbreviationLikePattern" value="'%' + abbreviationMask + '%'"/>
-		SELECT
-		<include refid="ChannelPartnerColumnList"/>
+		SELECT <include refid="ChannelPartnerColumnList"/>
 		FROM channel_partner
 		WHERE abbreviation LIKE #{abbreviationLikePattern}
 	</select>
 
 	<select id="readByPartyIdState" parameterType="map" resultMap="ChannelPartnerResultMap">
-		SELECT
-		<include refid="ChannelPartnerColumnList"/>
+		SELECT <include refid="ChannelPartnerColumnList"/>
 		FROM channel_partner
 		<where>
 			<if test="partyId != null">

@@ -1,8 +1,8 @@
 package team.asd.mapper;
 
-import team.asd.entity.ChannelPartner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import team.asd.entity.ChannelPartner;
 
 import java.util.List;
 

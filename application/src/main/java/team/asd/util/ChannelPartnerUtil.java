@@ -1,8 +1,8 @@
 package team.asd.util;
 
-import team.asd.dto.ChannelPartnerDto;
 import org.apache.commons.lang3.BooleanUtils;
 import team.asd.constants.ChannelPartnerState;
+import team.asd.dto.ChannelPartnerDto;
 import team.asd.entity.ChannelPartner;
 
 import java.util.Optional;

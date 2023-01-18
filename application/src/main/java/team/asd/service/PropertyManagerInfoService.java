@@ -1,11 +1,11 @@
 package team.asd.service;
 
-import team.asd.exceptions.ValidationException;
-import team.asd.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.asd.dao.PropertyManagerInfoDao;
 import team.asd.entity.PropertyManagerInfo;
+import team.asd.exceptions.ValidationException;
+import team.asd.util.ValidationUtil;
 
 @Service
 public class PropertyManagerInfoService {
